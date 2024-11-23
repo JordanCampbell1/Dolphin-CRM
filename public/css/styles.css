@@ -1,0 +1,20 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  background-color: #1e2936;
+  height: 4em;
+}
+
+.header-container > div {
+  display: flex;
+  align-items: center;
+  padding-left: 2em;
+}
+
+.header-container > div > img {
+  height: 1.75em;
+}
+
+.header-container > div > h4 {
+    color: white;
+}

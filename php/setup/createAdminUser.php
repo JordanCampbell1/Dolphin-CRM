@@ -45,6 +45,6 @@ if ($userExists == 0) {
     //     echo "Error: " . $stmt->errorInfo();
     // }
 } else {
-    echo "Admin user already exists.";
+    // echo "Admin user already exists.";
 }
 ?>
