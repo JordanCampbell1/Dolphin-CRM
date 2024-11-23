@@ -1,3 +1,8 @@
+<?php
+// Include the createAdminUser.php file
+include '../php/index.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,4 +13,6 @@
     <title>Dolphin CRM</title>
   </head>
   <body></body>
+
+  </body>
 </html>

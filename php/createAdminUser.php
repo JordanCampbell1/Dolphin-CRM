@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root"; // your DB username
 $password = ""; // your DB password
-$dbname = "your_database_name";
+$dbname = "dolphin_crm";
 
 // Create connection
 $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -22,24 +22,28 @@ if ($userExists == 0) {
     $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
     $firstName = 'Admin';
     $lastName = 'User';
+    $role = 'ADMIN';
 
     // Insert user into the database
-    $sql = "INSERT INTO users (email, password, first_name, last_name, created_at, updated_at)
-            VALUES (:email, :password, :first_name, :last_name, NOW(), NOW())";
+    $sql = "INSERT INTO users (firstname, lastname, password, email, role)
+            VALUES (:firstname, :lastname, :password, :email, :role)";
     $stmt = $conn->prepare($sql);
 
     // Bind parameters
-    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':firstname', $firstName);
+    $stmt->bindParam(':lastname', $lastName);
     $stmt->bindParam(':password', $hashedPassword);
-    $stmt->bindParam(':first_name', $firstName);
-    $stmt->bindParam(':last_name', $lastName);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':role', $role);
+   
 
     // Execute the query
-    if ($stmt->execute()) {
-        echo "Admin user added successfully.";
-    } else {
-        echo "Error: " . $stmt->errorInfo();
-    }
+    $stmt->execute();
+    // if ($stmt->execute()) {
+    //     echo "Admin user added successfully.";
+    // } else {
+    //     echo "Error: " . $stmt->errorInfo();
+    // }
 } else {
     echo "Admin user already exists.";
 }
