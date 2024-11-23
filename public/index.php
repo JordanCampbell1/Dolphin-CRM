@@ -21,7 +21,7 @@ include '../php/index.php';
                     <h3 class="card-title text-center mb-4">Login</h3>
 
                     <!-- Login Form -->
-                    <form action="/public/js/login.js" method="POST">
+                    <form method="POST">
                         <!-- Email input -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email address</label>
@@ -35,7 +35,7 @@ include '../php/index.php';
                         </div>
 
                         <!-- Login Button -->
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                        <button type="submit" class="btn submit-btn btn-primary w-100">Login</button>
                     </form>
                 </div>
             </div>

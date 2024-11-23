@@ -47,4 +47,7 @@ if ($userExists == 0) {
 } else {
     // echo "Admin user already exists.";
 }
+
+$conn = null;
+
 ?>
