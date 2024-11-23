@@ -9,4 +9,6 @@ if (!isset($_SESSION['admin_created'])) {
     // Set a session flag so it doesn't run again
     $_SESSION['admin_created'] = true;
 }
+
+session_destroy();
 ?>
