@@ -25,7 +25,7 @@ if ($userExists == 0) {
     $role = 'ADMIN';
 
     // Insert user into the database
-    $sql = "INSERT INTO users (firstname, lastname, password, email, role)
+    $sql = "INSERT INTO Users (firstname, lastname, password, email, role)
             VALUES (:firstname, :lastname, :password, :email, :role)";
     $stmt = $conn->prepare($sql);
 
