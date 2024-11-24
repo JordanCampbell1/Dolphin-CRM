@@ -12,6 +12,9 @@ include '../php/index.php';
 
 <body>
     <?php include '../php/HTML-base/navbar.php'; ?>
+    <script src="js/login.js"></script>
+    <link rel="stylesheet" href="css/styles-index.css" />
+
 
     <!-- Login Section -->
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
