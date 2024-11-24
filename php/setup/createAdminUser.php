@@ -11,7 +11,7 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Check if the admin user already exists
 $email = 'admin@project2.com';
-$stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+$stmt = $conn->prepare("SELECT COUNT(*) FROM Users WHERE email = :email");
 $stmt->bindParam(':email', $email);
 $stmt->execute();
 $userExists = $stmt->fetchColumn();
