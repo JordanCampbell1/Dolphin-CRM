@@ -30,7 +30,7 @@ try {
     $password = trim(htmlspecialchars($data->password));
 
     // SQL query to find user by email
-    $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
+    $sql = "SELECT * FROM Users WHERE email = :email LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
     $stmt->execute();
