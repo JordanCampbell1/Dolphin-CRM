@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include '/Applications/XAMPP/xamppfiles/htdocs/INFO2180-PROJECT/php/HTML-base/head.php'; ?>
+    <?php include '../../php/HTML-base/head.php'; ?>
     <title>Dashboard - Dolphin CRM</title>
-    <?php include '/Applications/XAMPP/xamppfiles/htdocs/INFO2180-PROJECT/php/HTML-base/navbar.php'; ?>
-    <link rel="stylesheet" href="/Applications/XAMPP/xamppfiles/htdocs/INFO2180-PROJECT/public/css/styles-index.css" />
+    <?php include '../../php/HTML-base/navbar.php'; ?>
+    <link rel="stylesheet" href="../css/styles-index.css" />
 </head>
 <body>
 
