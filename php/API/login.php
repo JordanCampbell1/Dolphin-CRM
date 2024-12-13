@@ -42,6 +42,11 @@ try {
 
         // Verify the provided password against the stored hashed password
         if (password_verify($password, $user['password'])) {
+             // Start a session and store user information
+             session_start();
+             $_SESSION['user_id'] = $user['id'];
+             $_SESSION['user_name'] = $user['firstname'] . ' ' . $user['lastname'];
+             
             // Successful login: return success response with user data (exclude password)
             unset($user['password']);  // Remove password from the response
             echo json_encode(["success" => true, "message" => "Login successful", "user" => $user]);

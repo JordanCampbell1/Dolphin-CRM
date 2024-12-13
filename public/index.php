@@ -1,6 +1,11 @@
 <?php
+// Start the session
+session_start();
+
+?>
+<?php
 // Include the setup file for insert file
-include '../php/index.php';
+include '../php/set.php';
 ?>
 
 <!DOCTYPE html>
