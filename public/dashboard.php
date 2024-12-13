@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include '../../php/HTML-base/head.php'; ?>
+    <?php include '../php/HTML-base/head.php'; ?>
     <title>Dashboard - Dolphin CRM</title>
-    <link rel="stylesheet" href="../css/styles-index.css" />
+    <link rel="stylesheet" href="css/styles-index.css" />
     
     <style>
         /* Ensure the page layout covers full height */
@@ -105,12 +105,16 @@
 <body>
 
     <div class="top">
-        <?php include '../../php/HTML-base/navbar.php'; ?>
+        <?php
+        $headerClass = 'secondary-header';
+        $headerId = 'header2';
+        include '../php/HTML-base/navbar.php'; 
+        ?>    
     </div>
 
     <div class="main-container">
         <div class="side">
-            <?php include '../../php/HTML-base/side-nav.php'; ?>
+            <?php include '../php/HTML-base/side-nav.php'; ?>
         </div>
 
         <div class="content">
