@@ -61,3 +61,22 @@ body {
 .sidenav a:hover {
   color: #595959;
 }
+
+@media(max-width:576px){
+  .card{
+    max-width: 100%;
+    margin: 0 15px;
+  }
+
+.card body{
+  padding: 0rem 1.5rem;
+}
+}
+
+@keyframes fadeIn {
+  from{opacity: 0;transform: translateY(50px);}
+  to{opacity: 1;transform: translateY(0px);}
+}
+.card{
+  animation: fadeIn 0.6s ease-out;
+}
