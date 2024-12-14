@@ -1,5 +1,8 @@
 <?php
-session_start();
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
+
 
 // Check if it's the user's first visit
 if (!isset($_SESSION['admin_created'])) {

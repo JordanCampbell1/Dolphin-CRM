@@ -1,9 +1,23 @@
 <?php
-// Start the session
-session_start();
-$_SESSION['user_id'] = $user['id'];
-$_SESSION['user_name'] = $user['firstname'] . ' ' . $user['lastname'];
 
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+    $_SESSION['user_id']="";
+    $_SESSION['user_firstname']="";
+    $_SESSION['user_lastname'] = "";
+    $_SESSION['user_email'] = "";
+}
+$user = isset($_SESSION['user_id']) ? [
+    'id' => $_SESSION['user_id'],
+    'firstname' => $_SESSION['user_firstname'],
+    'lastname' => $_SESSION['user_lastname'],
+     'email' => $_SESSION['user_email'],// Assuming you have this in the session
+     ] : null;
+      // Set session variables if $user is defined 
+      if ($user!="") {
+         $_SESSION['user_id'] = $user['id'];
+         $_SESSION['user_name'] = $user['firstname'] . ' ' . $user['lastname'];
+         }
 ?>
 <?php
 // Include the setup file for insert file

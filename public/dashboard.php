@@ -1,7 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include '../php/HTML-base/head.php'; ?>
+    <?php include '../php/HTML-base/head.php';
+        try {
+    // Replace with your actual database credentials
+        $host = "localhost";
+     $dbname = "dolphin_crm";
+            $username = "root"; // Or your database username
+        $password = ""; // Or your database password
+
+    // Create a new PDO object
+     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+
+        // Set PDO error mode to exception for better debugging
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }    catch (PDOException $e) {
+    // Handle connection errors
+    die("Database connection failed: " . $e->getMessage());
+    }
+
+
+    ?>
     <title>Dashboard - Dolphin CRM</title>
     <link rel="stylesheet" href="css/styles-index.css" />
     
@@ -216,7 +235,7 @@
                                 <?php
                                 // Assuming $conn is your PDO database connection
                                 try {
-                                    $stmt = $conn->prepare("SELECT title, CONCAT(firstname, ' ', lastname) AS full_name, email, company, type, assigned_to FROM Contacts");
+                                    $stmt = $conn->query("SELECT title, CONCAT(firstname, ' ', lastname) AS full_name, email, company, type, assigned_to FROM Contacts");
                                     $stmt->execute();
                                     $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -231,6 +250,9 @@
                                     }
                                 } catch (PDOException $e) {
                                     echo "<tr><td colspan='5'>Error fetching contacts: " . $e->getMessage() . "</td></tr>";
+                                }
+                                catch (Exception $e) {
+                                    $e->getMessage() . "";
                                 }
                                 ?>
                             </tbody>
