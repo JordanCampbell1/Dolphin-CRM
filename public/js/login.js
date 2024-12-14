@@ -48,7 +48,7 @@ window.onload = () => {
       // Handle the result from login.php (successful login or error message)
       if (result.success) {
         // Redirect to the dashboard or another page after successful login
-        window.location.href = "public/dashboard.php"; 
+        window.location.href = "dashboard.php";
       } else {
         alert(result.message); // Show error message returned from login.php
       }
