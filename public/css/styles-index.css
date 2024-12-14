@@ -45,7 +45,7 @@ body {
   left: 0;
   height: calc(100% - 4em); /* Adjust based on header height */
   width: 250px; /* Adjust as needed */
-  background-color: #111;
+  background-color: #ffffff;
   z-index: 899; /* Ensure it stays above other content */
   padding-top: 20px;
 }
@@ -54,10 +54,10 @@ body {
   padding: 8px 16px;
   text-decoration: none;
   font-size: 16px;
-  color: #818181;
+  color: #000000;
   display: block;
 }
 
 .sidenav a:hover {
-  color: #f1f1f1;
+  color: #595959;
 }

@@ -31,7 +31,7 @@
 
         /* Sidebar styles */
         .side {
-            background-color: #111;
+            background-color: #ffffff;
             height: 100%; /* Full height */
             flex: 0 0 250px; /* Fixed width for sidebar */
             position: relative;
@@ -73,53 +73,97 @@
             background-color: #004494;
         }
 
-        #content_container{
+        #content_container {
             background-color: #ffffff;
             border-radius: 8px;
         }
 
-        /* Table container with white background */
-        .table-container {
-            background-color: #fff;
-            border: 2px solid;
-            border-color: grey;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-
-        /* Table styling */
+        /* Table styles */
         table {
             width: 100%;
             border-collapse: collapse;
+            background-color: #fff; /* White background for table */
+            border: 1px solid #d3d3d3; /* Grey border for the table */
+            border-radius: 8px; /* Rounded corners for the table */
+            overflow: hidden; /* Ensure the content inside respects the rounded corners */
         }
 
+        /* Table header with rounded corners at the top */
+        thead {
+            background-color: #d3d3d3; /* Light grey background for header */
+            color: black; /* Text color for the header */
+            border-top-left-radius: 8px; /* Rounded top left corner */
+            border-top-right-radius: 8px; /* Rounded top right corner */
+        }
+
+        /* Add border-radius to the table rows, columns, and header for consistency */
         th, td {
             padding: 12px;
-            border: 1px solid #ddd;
             text-align: left;
+            border: 1px solid #d3d3d3; /* Grey border for table cells */
         }
 
-        th {
-            background-color: #33f;
-            color: white;
+        /* Optional: To ensure no overlapping borders between the header and the body */
+        tbody tr:first-child th,
+        tbody tr:first-child td {
+            border-top: none;
+        }
+
+        /* Add this to ensure rounded corners are respected inside the table container */
+        .table-container {
+            margin: 16px;
+            background-color: #fff;
+            overflow: hidden; /* Ensures content respects rounded corners */
+        }
+
+
+        #filtertxt {
+            font-weight: bold; /* Make it bold */
+            color: black; /* Optional: Set color to grey */
+            margin-right: 10px; /* Add spacing between "Filter By:" and options */
         }
 
         /* Filter container styling */
         #filter-container {
             margin-bottom: 20px;
+            margin-left: 10px;
+            margin-top: 16px;
         }
 
+        /* Default filter option styles */
         .filter-option {
             margin-right: 10px;
             cursor: pointer;
-            color: #0056b3;
-            text-decoration: underline;
+            color: grey; /* Default grey text */
+            text-decoration: none; /* No underline */
+            padding: 5px 10px;
+            position: relative;
         }
 
-        .filter-option:hover {
-            color: #004494;
+        /* Highlighted filter option */
+        .filter-option.selected {
+            color: #6a0dad; /* Bluish-purple text color */
         }
+
+        /* Add underline for the selected filter option */
+        .filter-option.selected::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background-color: #6a0dad; /* Bluish-purple underline */
+            transform: scaleX(1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Optional hover effect */
+        .filter-option:hover {
+            color: #6a0dad; /* Hover color matches selected state */
+        } 
+
+
 
     </style>
 </head>
@@ -148,7 +192,7 @@
                 <div id="content_container">
                     <!-- Filter Container -->
                     <div id="filter-container">
-                        <span>Filter By:</span>
+                        <span id="filtertxt">Filter By:</span>
                         <span class="filter-option" data-filter="all">All</span>
                         <span class="filter-option" data-filter="Sales Leads">Sales Leads</span>
                         <span class="filter-option" data-filter="Support">Support</span>
@@ -157,16 +201,16 @@
 
                     <!-- Table wrapped in a white background container -->
                     <div class="table-container">
-                        <table class="table table-striped">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Full Name</th>
-                                    <th>Email</th>
-                                    <th>Company</th>
-                                    <th>Type of Contact</th>
-                                </tr>
-                            </thead>
+                        <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Company</th>
+                                <th>Type of Contact</th>
+                            </tr>
+                        </thead>
                             <tbody id="contacts-table-body">
                                 <!-- PHP to Fetch and Display Contacts -->
                                 <?php
@@ -205,6 +249,13 @@
 
             filterOptions.forEach(option => {
                 option.addEventListener("click", () => {
+                    // Remove 'selected' class from all options
+                    filterOptions.forEach(opt => opt.classList.remove("selected"));
+                    
+                    // Add 'selected' class to the clicked option
+                    option.classList.add("selected");
+
+                    // Filter the table based on the selected option
                     const filter = option.getAttribute("data-filter");
                     filterTable(filter);
                 });
