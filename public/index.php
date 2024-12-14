@@ -1,6 +1,8 @@
 <?php
 // Start the session
 session_start();
+$_SESSION['user_id'] = $user['id'];
+$_SESSION['user_name'] = $user['firstname'] . ' ' . $user['lastname'];
 
 ?>
 <?php
@@ -55,3 +57,6 @@ include '../php/set.php';
 </body>
 
 </html>
+
+
+
