@@ -15,10 +15,10 @@
 </head>
 <body>
     <div class="sidenav">
-        <a href="dashboard.php"><img src="../public/images/home.png" alt="New Contact Icon"> Home</a>
-        <a href="newContact.php"><img src="../public/images/home.png" alt="New Contact Icon"> New Contact</a>
-        <a href="users.php"><img src="../public/images/home.png" alt="New Contact Icon"> Users</a>
-        <a href="index.php" id="logout-link"><img src="../public/images/home.png" alt="New Contact Icon"> Logout</a>
+        <a href="dashboard.php"><img src="../public/images/home.png" alt="home ico"> Home</a>
+        <a href="newContact.php"><img src="../public/images/user.png" alt="new contact icon"> New Contact</a>
+        <a href="users.php"><img src="../public/images/friends.png" alt="users icon"> Users</a>
+        <a href="index.php" id="logout-link"><img src="../public/images/logout.png" alt="logout icon"> Logout</a>
     </div>
 </body>
 </html>
