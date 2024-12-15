@@ -1,59 +1,87 @@
 <?php
-require_once 'db_connection.php'; // Database connection file
-session_start(); // Start the session
+require_once '../php/config.php';
+session_start();
 
-// Process the form data when the request is POST
+// Debugging: Enable error reporting
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Start output buffering
+ob_start();
+
+if (!isset($_SESSION['user_id'])) {
+    die("Access denied. Please log in.");
+}
+
+$error_message = "";
+$success_message = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve and sanitize form data
-    $title = htmlspecialchars($_POST['title']);
-    $firstname = htmlspecialchars($_POST['firstname']);
-    $lastname = htmlspecialchars($_POST['lastname']);
-    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-    $telephone = htmlspecialchars($_POST['telephone']);
-    $company = htmlspecialchars($_POST['company']);
-    $type = htmlspecialchars($_POST['type']);
+    // Debugging: Output POST data
+    var_dump($_POST);
+
+    $title = htmlspecialchars(trim($_POST['title']));
+    $firstname = htmlspecialchars(trim($_POST['firstname']));
+    $lastname = htmlspecialchars(trim($_POST['lastname']));
+    $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+    $telephone = htmlspecialchars(trim($_POST['telephone']));
+    $company = htmlspecialchars(trim($_POST['company']));
+    $type = htmlspecialchars(trim($_POST['type']));
     $assigned_to = intval($_POST['assigned_to']);
-    $created_by = intval($_SESSION['user_id']); // Get the session user ID
+    $created_by = intval($_SESSION['user_id']);
 
-    // Validate mandatory fields
-    if (!$firstname || !$lastname || !$email || !$type) {
-        $error_message = "Firstname, Lastname, Email, and Type are required.";
+    if (empty($firstname) || empty($lastname) || !$email || empty($type)) {
+        $error_message = "Required fields are missing.";
     } elseif (!in_array($type, ['sales lead', 'support'])) {
-        $error_message = "Invalid contact type.";
+        $error_message = "Invalid type.";
     } else {
-        // SQL to insert data into Contacts table
-        $query = "INSERT INTO Contacts (title, firstname, lastname, email, telephone, company, type, assigned_to, created_by, created_at) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+        try {
+            $conn = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Prepare the query
-        $stmt = $conn->prepare($query);
-        if (!$stmt) {
-            $error_message = "Error preparing query: " . $conn->error;
-        } else {
-            // Bind parameters
-            $stmt->bind_param(
-                'sssssssii',
-                $title,
-                $firstname,
-                $lastname,
-                $email,
-                $telephone,
-                $company,
-                $type,
-                $assigned_to,
-                $created_by
-            );
+            $query = "INSERT INTO Contacts (title, firstname, lastname, email, telephone, company, type, assigned_to, created_by, created_at) 
+                      VALUES (:title, :firstname, :lastname, :email, :telephone, :company, :type, :assigned_to, :created_by, NOW())";
+            $stmt = $conn->prepare($query);
 
-            // Execute query
-            if ($stmt->execute()) {
-                $success_message = "New contact successfully added!";
+            $stmt->execute([
+                ':title' => $title,
+                ':firstname' => $firstname,
+                ':lastname' => $lastname,
+                ':email' => $email,
+                ':telephone' => $telephone,
+                ':company' => $company,
+                ':type' => $type,
+                ':assigned_to' => $assigned_to,
+                ':created_by' => $created_by,
+            ]);
+
+            // Debugging: Check execution result
+            if ($stmt->rowCount() > 0) {
+                $success_message = "New contact added!";
             } else {
-                $error_message = "Error adding contact: " . $stmt->error;
+                $error_message = "Insert failed. No rows affected.";
             }
-            $stmt->close();
+        } catch (PDOException $e) {
+            $error_message = "Error: " . $e->getMessage();
         }
     }
+}
 
-    $conn->close();
+// Debugging: Output messages
+if (!empty($error_message)) {
+    $_SESSION['error'] = $error_message;
+    echo $error_message; // Debugging
+    ob_end_clean(); // Clear buffer
+    header("Location: ../../public/newContact.php");
+    exit();
+}
+
+if (!empty($success_message)) {
+    $_SESSION['success'] = $success_message;
+    echo $success_message; // Debugging
+    ob_end_clean(); // Clear buffer
+    header("Location: ../../public/dashboard.php");
+    exit();
 }
 ?>
