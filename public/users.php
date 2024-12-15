@@ -32,13 +32,6 @@ try {
     <link rel="stylesheet" href="css/styles-index.css" />
     <link rel="stylesheet" href="css/users.css">
 </head>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <?php include '../php/HTML-base/head.php'; ?>
-    <title>Users - Dolphin CRM</title>
-    <link rel="stylesheet" href="css/styles-index.css" />
-</head>
 <body>
     <div class="top">
         <?php include '../php/HTML-base/navbar.php'; ?>
