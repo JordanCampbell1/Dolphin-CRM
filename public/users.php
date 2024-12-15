@@ -154,7 +154,7 @@ try {
         <div class="content">
             <div class="content-header">
                 <h1>Users</h1>
-                <a href="addUser.php" class="add-user-btn">Add User</a>
+                <a href="newuser.php" class="add-user-btn">Add User</a>
             </div>
 
             <div class="table-container">
