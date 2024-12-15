@@ -95,7 +95,7 @@ try {
         #assigned_to {
             width: auto;
         }
-        
+
         #sbt-bt-container {
             display: flex;
             justify-content: flex-end;
@@ -150,7 +150,7 @@ try {
             <h1>New Contact</h1>
 
             <div class="form-container">
-            <form action="processNewContact.php" method="POST">
+            <form action="../php/API/CreateContact.php" method="POST">
             <label for="title">Title:</label>
             <select name="title" id="title" required>
                 <option value="Mr">Mr</option>
