@@ -3,21 +3,32 @@
 <head>
     <?php include '../php/HTML-base/head.php';
         try {
-    // Replace with your actual database credentials
-        $host = "localhost";
-     $dbname = "dolphin_crm";
+        // Replace with your actual database credentials
+            $host = "localhost";
+            $dbname = "dolphin_crm";
             $username = "root"; // Or your database username
-        $password = ""; // Or your database password
+            $password = ""; // Or your database password
 
-    // Create a new PDO object
-     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+            // Create a new PDO object
+            $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
 
-        // Set PDO error mode to exception for better debugging
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }    catch (PDOException $e) {
-    // Handle connection errors
-    die("Database connection failed: " . $e->getMessage());
-    }
+            // Set PDO error mode to exception for better debugging
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Query to fetch all users
+            $sql = "SELECT id, firstname, lastname, email, role, created_at FROM Users";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        }    catch (PDOException $e) {
+        // Handle connection errors
+        die("Database connection failed: " . $e->getMessage());
+
+        }catch (PDOException $e) {
+            echo "Database error: " . $e->getMessage();
+            exit();
+        }
 
 
     ?>
@@ -119,7 +130,8 @@
         th, td {
             padding: 12px;
             text-align: left;
-            border: 1px solid #d3d3d3; /* Grey border for table cells */
+            border-bottom: 1px solid #d3d3d3; /* Only bottom border for rows */
+            border-right: none; /* Remove right border */
         }
 
         /* Optional: To ensure no overlapping borders between the header and the body */
@@ -135,7 +147,6 @@
             overflow: hidden; /* Ensures content respects rounded corners */
         }
 
-
         #filtertxt {
             font-weight: bold; /* Make it bold */
             color: black; /* Optional: Set color to grey */
@@ -147,6 +158,11 @@
             margin-bottom: 20px;
             margin-left: 10px;
             margin-top: 16px;
+        }
+
+        #filter-container img {
+            width: 16px;
+            margin-right: 8px;
         }
 
         /* Default filter option styles */
@@ -180,10 +196,40 @@
         /* Optional hover effect */
         .filter-option:hover {
             color: #6a0dad; /* Hover color matches selected state */
-        } 
+        }
 
+        .type-container {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
 
+        .sales-lead {
+            background-color: yellow;
+            color: black;
+        }
 
+        .support {
+            background-color: blue;
+            color: white;
+        }
+
+        .type-action-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .view-link {
+            color: blue;
+            text-decoration: none; /* Remove underline */
+            cursor: pointer;
+            margin-left: 10px; /* Space between type and view link */
+        }
+
+        .view-link:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
     </style>
 </head>
 <body>
@@ -211,10 +257,10 @@
                 <div id="content_container">
                     <!-- Filter Container -->
                     <div id="filter-container">
-                        <span id="filtertxt">Filter By:</span>
+                        <span id="filtertxt"><img src="../public/images/filter.png" alt="home ico"> Filter By:</span>
                         <span class="filter-option" data-filter="all">All</span>
-                        <span class="filter-option" data-filter="Sales Leads">Sales Leads</span>
-                        <span class="filter-option" data-filter="Support">Support</span>
+                        <span class="filter-option" data-filter="sales leads">Sales Leads</span>
+                        <span class="filter-option" data-filter="support">Support</span>
                         <span class="filter-option" data-filter="assigned">Assigned to me</span>
                     </div>
 
@@ -229,30 +275,30 @@
                                 <th>Company</th>
                                 <th>Type of Contact</th>
                             </tr>
-                        </thead>
                             <tbody id="contacts-table-body">
-                                <!-- PHP to Fetch and Display Contacts -->
                                 <?php
-                                // Assuming $conn is your PDO database connection
                                 try {
-                                    $stmt = $conn->query("SELECT title, CONCAT(firstname, ' ', lastname) AS full_name, email, company, type, assigned_to FROM Contacts");
+                                    $stmt = $conn->query("SELECT id, title, CONCAT(firstname, ' ', lastname) AS full_name, email, company, type, assigned_to FROM Contacts");
                                     $stmt->execute();
                                     $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                     foreach ($contacts as $contact) {
+                                        $typeClass = strtolower(str_replace(' ', '-', $contact['type']));
                                         echo "<tr data-type='{$contact['type']}' data-assigned='{$contact['assigned_to']}'>
                                                 <td>{$contact['title']}</td>
                                                 <td>{$contact['full_name']}</td>
                                                 <td>{$contact['email']}</td>
                                                 <td>{$contact['company']}</td>
-                                                <td>{$contact['type']}</td>
+                                                <td>
+                                                    <div class='type-action-container'>
+                                                        <span class='type-container {$typeClass}'>{$contact['type']}</span>
+                                                        <a class='view-link' href='fullview.php?id={$contact['id']}'>View</a>
+                                                    </div>
+                                                </td>
                                             </tr>";
                                     }
                                 } catch (PDOException $e) {
                                     echo "<tr><td colspan='5'>Error fetching contacts: " . $e->getMessage() . "</td></tr>";
-                                }
-                                catch (Exception $e) {
-                                    $e->getMessage() . "";
                                 }
                                 ?>
                             </tbody>
@@ -267,47 +313,48 @@
         document.addEventListener("DOMContentLoaded", () => {
             const filterOptions = document.querySelectorAll(".filter-option");
             const tableBody = document.getElementById("contacts-table-body");
-            const userId = "<?php echo $_SESSION['user_id']; ?>"; // Assuming user ID is stored in session
+            const userId = "<?php echo $_SESSION['user_id']; ?>"; // Ensure userId is available from session
 
+            // Add event listeners to filter options
             filterOptions.forEach(option => {
                 option.addEventListener("click", () => {
-                    // Remove 'selected' class from all options
-                    filterOptions.forEach(opt => opt.classList.remove("selected"));
-                    
-                    // Add 'selected' class to the clicked option
-                    option.classList.add("selected");
-
-                    // Filter the table based on the selected option
-                    const filter = option.getAttribute("data-filter");
-                    filterTable(filter);
+                    filterOptions.forEach(opt => opt.classList.remove("selected")); // Remove 'selected' class from all options
+                    option.classList.add("selected"); // Add 'selected' class to the clicked option
+                    const filter = option.getAttribute("data-filter"); // Get the selected filter type
+                    filterTable(filter); // Apply the selected filter to the table
                 });
             });
 
+            // Function to filter table based on the selected filter
             function filterTable(filter) {
                 const rows = tableBody.querySelectorAll("tr");
+
                 rows.forEach(row => {
                     const type = row.getAttribute("data-type");
                     const assignedTo = row.getAttribute("data-assigned");
 
                     if (filter === "all") {
-                        row.style.display = "";
+                        row.style.display = ""; // Show all rows
                     } else if (filter === "assigned") {
-                        if (assignedTo === userId) {
-                            row.style.display = "";
+                        if (assignedTo === userId || assignedTo === "") {
+                            row.style.display = ""; // Show rows assigned to the current user
                         } else {
-                            row.style.display = "none";
+                            row.style.display = "none"; // Hide non-assigned rows
+                        }
+                    } else if (filter === "sales leads" || filter === "support") {
+                        if (type === filter) {
+                            row.style.display = ""; // Show rows matching the selected type
+                        } else {
+                            row.style.display = "none"; // Hide non-matching rows
                         }
                     } else {
-                        if (type === filter) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
+                        row.style.display = "none"; // Hide rows that don't match any filter
                     }
                 });
             }
         });
     </script>
+
 
 </body>
 </html>
