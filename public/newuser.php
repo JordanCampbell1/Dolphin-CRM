@@ -193,8 +193,8 @@ $conn = null;
                     <div class="form-group">
                         <label for="role">Role</label>
                         <select id="role" name="role" required>
-                            <option value="member">Member</option>
-                            <option value="admin">Admin</option>
+                            <option value="Member">Member</option>
+                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <div class="form-actions">

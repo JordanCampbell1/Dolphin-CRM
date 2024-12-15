@@ -22,7 +22,7 @@ if ($userExists == 0) {
     $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
     $firstName = 'Admin';
     $lastName = 'User';
-    $role = 'ADMIN';
+    $role = 'Admin';
 
     // Insert user into the database
     $sql = "INSERT INTO Users (firstname, lastname, password, email, role)
