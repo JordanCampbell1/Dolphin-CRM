@@ -74,40 +74,202 @@ foreach ($results as $row) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Details</title>
+    <?php include '../php/HTML-base/head.php'; ?>
+    <title>Contact Details - Dolphin CRM</title>
+    <link rel="stylesheet" href="css/styles-index.css" />
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; }
-        .note { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        .note small { display: block; color: #666; margin-top: 5px; }
+        /* Ensure the page layout covers full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        /* Container for the entire page */
+        .main-container {
+            display: flex;
+            min-height: 100vh; /* Full viewport height */
+            width: 100%;
+        }
+
+        /* Top header with sticky position */
+        .top {
+            position: sticky;
+            top: 0;
+            z-index: 1000; /* Ensure it stays above other elements */
+            background-color: #fff;
+            height: 60px; /* Match the header height */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+        }
+
+        /* Sidebar styles */
+        .side {
+            background-color: #ffffff;
+            height: 100%; /* Full height */
+            flex: 0 0 250px; /* Fixed width for sidebar */
+            position: relative;
+            padding-top: 60px; /* Space for the sticky header */
+        }
+
+        /* Content section */
+        .content {
+            padding: 40px;
+            background-color: #8f9092; /* Slight grey color */
+            flex-grow: 1; /* Take remaining space */
+            min-height: calc(100vh - 60px); /* Full height minus the header height */
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
+
+        /* Container for the form and content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #conatiner-details{
+            background-color: white;
+            border: solid grey 1px;
+            border-radius: 4px;
+            margin: 16px;
+        }
+        
+        .content-margin{
+            margin: 8px;
+        }
+
+        #container-notes-list{
+            background-color: white;
+            border: solid grey 1px;
+            border-radius: 4px;
+            margin: 16px;
+        }
+        #container-addnotes{
+            background-color: white;
+            border: solid grey 1px;
+            border-radius: 4px;
+            margin: 16px;
+        }
+        
+
+        /* Flex layout for header (h1 and button inline) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #004494;
+        }
+
+        #content_container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+
+        /* Table styles */
+        .note {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .note small {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>Contact Details</h1>
-    <?php if ($contact): ?>
-        <p><strong>Name:</strong> <?php echo htmlspecialchars($contact['firstname'] . ' ' . $contact['lastname']); ?></p>
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($contact['email']); ?></p>
-        <p><strong>Telephone:</strong> <?php echo htmlspecialchars($contact['telephone']); ?></p>
-        <p><strong>Company:</strong> <?php echo htmlspecialchars($contact['company']); ?></p>
-        <p><strong>Type:</strong> <?php echo htmlspecialchars($contact['type']); ?></p>
-        <p><strong>Created By:</strong> <?php echo htmlspecialchars($contact['created_by']); ?></p>
-        <p><strong>Created At:</strong> <?php echo htmlspecialchars($contact['created_at']); ?></p>
-        <p><strong>Updated At:</strong> <?php echo htmlspecialchars($contact['updated_at']); ?></p>
 
-        <h2>Notes</h2>
-        <?php if (!empty($notes)): ?>
-            <?php foreach ($notes as $note): ?>
-                <div class="note">
-                    <p><?php echo nl2br(htmlspecialchars($note['comment'])); ?></p>
-                    <small>Created at: <?php echo htmlspecialchars($note['created_at']); ?></small>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No notes available for this contact.</p>
-        <?php endif; ?>
-    <?php else: ?>
-        <p>Contact not found.</p>
-    <?php endif; ?>
+    <div class="top">
+        <?php
+        $headerClass = 'secondary-header';
+        $headerId = 'header2';
+        include '../php/HTML-base/navbar.php'; 
+        ?>    
+    </div>
+
+    <div class="main-container">
+        <div class="side">
+            <?php include '../php/HTML-base/side-nav.php'; ?>
+        </div>
+
+        <div class="content">
+            <div class="container">
+                <?php if ($contact): ?>
+                    <h2><?php echo htmlspecialchars($contact['title'].'.'.$contact['firstname'] . ' ' . $contact['lastname']); ?></h2>
+                    <p>Created on  <?php echo htmlspecialchars($contact['created_at']); ?></p> by <?php echo htmlspecialchars($contact['created_by']); ?> </p>
+                    <p>Updated on <?php echo htmlspecialchars($contact['updated_at']); ?></p>
+
+                    <div id="conatiner-details">
+                        <div class="content-margin">
+                            <p class="label">Email</p>
+                            <p><?php echo htmlspecialchars($contact['email']); ?></p>
+
+                            <p class="label">Telephone</p>
+                            <p><?php echo htmlspecialchars($contact['telephone']); ?></p>
+
+                            <p class="label">Company</p>
+                            <p><?php echo htmlspecialchars($contact['company']); ?></p>
+
+                            <p class="label">Assigned To</p>
+                            <p><?php echo htmlspecialchars($contact['created_by']); ?></p>
+                        
+                        </div>
+                    </div>
+                    <div id="container-notes-list">
+                        <div class="content-margin">
+                            <h5>Notes</h5>
+
+                            <?php if (!empty($notes)): ?>
+                                <?php foreach ($notes as $note): ?>
+                                    <div class="note">
+                                        <p><?php echo nl2br(htmlspecialchars($note['comment'])); ?></p>
+                                        <small>Created at: <?php echo htmlspecialchars($note['created_at']); ?></small>
+                                    </div>
+                                <?php endforeach; ?>
+                                <?php else: ?>
+                                   <p>No notes available for this contact.</p>
+                                <?php endif; ?>
+                                <?php else: ?>
+                                    <p>Contact not found.</p>
+                                <?php endif; ?>
+                        </div>
+                    </div>
+                    <div id="container-addnotes">
+                        <div class="content-margin">
+                            <h6>Add a note about <?php echo htmlspecialchars($contact['firstname']); ?></h6>
+                            <form action="add_note.php" method="POST" id="note-form">
+                                <textarea name="note_comment" placeholder="Enter your note here..." onkeypress="submitOnEnter(event)"></textarea>
+                                <button type="submit" class="btn">Add Note</button>
+                            </form>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function submitOnEnter(event) {
+            if (event.key === 'Enter' && !event.shiftKey) { // Check if "Enter" key is pressed without Shift
+                event.preventDefault(); // Prevent the default "Enter" key behavior (new line)
+                document.getElementById('note-form').submit(); // Submit the form
+            }
+        }
+    </script>
+
 </body>
 </html>
