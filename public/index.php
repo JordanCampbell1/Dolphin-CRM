@@ -20,10 +20,10 @@ $user = isset($_SESSION['user_id']) ? [
          }
 ?>
 <?php
+//
 // Include the setup file for insert file
 include '../php/set.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
