@@ -1,5 +1,5 @@
 <?php
-require_once '../php/config.php';
+require_once '../config.php';
 session_start();
 
 // Debugging: Enable error reporting
