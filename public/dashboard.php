@@ -233,7 +233,7 @@
     </style>
 </head>
 <body>
-
+<script src='js/dashboard.js'></script>
     <div class="top">
         <?php
         $headerClass = 'secondary-header';
@@ -310,51 +310,7 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const filterOptions = document.querySelectorAll(".filter-option");
-            const tableBody = document.getElementById("contacts-table-body");
-            const userId = "<?php echo $_SESSION['user_id']; ?>"; // Ensure userId is available from session
-
-            // Add event listeners to filter options
-            filterOptions.forEach(option => {
-                option.addEventListener("click", () => {
-                    filterOptions.forEach(opt => opt.classList.remove("selected")); // Remove 'selected' class from all options
-                    option.classList.add("selected"); // Add 'selected' class to the clicked option
-                    const filter = option.getAttribute("data-filter"); // Get the selected filter type
-                    filterTable(filter); // Apply the selected filter to the table
-                });
-            });
-
-            // Function to filter table based on the selected filter
-            function filterTable(filter) {
-                const rows = tableBody.querySelectorAll("tr");
-
-                rows.forEach(row => {
-                    const type = row.getAttribute("data-type");
-                    const assignedTo = row.getAttribute("data-assigned");
-
-                    if (filter === "all") {
-                        row.style.display = ""; // Show all rows
-                    } else if (filter === "assigned") {
-                        if (assignedTo === userId || assignedTo === "") {
-                            row.style.display = ""; // Show rows assigned to the current user
-                        } else {
-                            row.style.display = "none"; // Hide non-assigned rows
-                        }
-                    } else if (filter === "sales leads" || filter === "support") {
-                        if (type === filter) {
-                            row.style.display = ""; // Show rows matching the selected type
-                        } else {
-                            row.style.display = "none"; // Hide non-matching rows
-                        }
-                    } else {
-                        row.style.display = "none"; // Hide rows that don't match any filter
-                    }
-                });
-            }
-        });
+        
     </script>
-
-
 </body>
 </html>
