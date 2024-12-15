@@ -1,29 +1,25 @@
 <?php
+// Start the session
+session_start();
+
+// Database connection variables
 $servername = "localhost";
-$username = "root";  // Your DB username
-$password = "";      // Your DB password
-$dbname = "dolphin_crm";  // Your DB name
+$username = "root";
+$password = "";
+$dbname = "dolphin_crm";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Fetch users from the database
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    // Query to fetch all users
+    $sql = "SELECT id, firstname, lastname, email, role, created_at FROM Users";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Database error: " . $e->getMessage();
+    exit();
 }
-
-// SQL query to select all users
-$sql = "SELECT id, firstname, lastname, email, role, created_at FROM Users";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // Output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo "ID: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. " - Email: " . $row["email"]. " - Role: " . $row["role"]. " - Created At: " . $row["created_at"]. "<br>";
-    }
-} else {
-    echo "0 results";
-}
-
-$conn->close();
 ?>

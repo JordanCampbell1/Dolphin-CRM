@@ -1,10 +1,10 @@
 <?php
-// Include database connection
-require_once 'db_connection.php'; // Ensure this file connects to the `dolphin_crm` database
+require_once 'db_connection.php'; // Database connection file
+session_start(); // Start the session
 
-// Check if request is POST
+// Process the form data when the request is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize input
+    // Retrieve and sanitize form data
     $title = htmlspecialchars($_POST['title']);
     $firstname = htmlspecialchars($_POST['firstname']);
     $lastname = htmlspecialchars($_POST['lastname']);
@@ -13,55 +13,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $company = htmlspecialchars($_POST['company']);
     $type = htmlspecialchars($_POST['type']);
     $assigned_to = intval($_POST['assigned_to']);
-    $created_by = intval($_POST['created_by']); // Retrieve this from the session
+    $created_by = intval($_SESSION['user_id']); // Get the session user ID
 
     // Validate mandatory fields
     if (!$firstname || !$lastname || !$email || !$type) {
-        http_response_code(400);
-        echo json_encode(["error" => "Firstname, Lastname, Email, and Type are required."]);
-        exit;
-    }
-
-    // Check if type is valid
-    if (!in_array($type, ['sales lead', 'support'])) {
-        http_response_code(400);
-        echo json_encode(["error" => "Invalid contact type."]);
-        exit;
-    }
-
-    // Insert into database
-    $query = "INSERT INTO Contacts (title, firstname, lastname, email, telephone, company, type, assigned_to, created_by, created_at) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
-    $stmt = $conn->prepare($query);
-
-    if ($stmt === false) {
-        http_response_code(500);
-        echo json_encode(["error" => "Failed to prepare query."]);
-        exit;
-    }
-
-    $stmt->bind_param(
-        'sssssssii',
-        $title,
-        $firstname,
-        $lastname,
-        $email,
-        $telephone,
-        $company,
-        $type,
-        $assigned_to,
-        $created_by
-    );
-
-    if ($stmt->execute()) {
-        http_response_code(201);
-        echo json_encode(["success" => "Contact created successfully."]);
+        $error_message = "Firstname, Lastname, Email, and Type are required.";
+    } elseif (!in_array($type, ['sales lead', 'support'])) {
+        $error_message = "Invalid contact type.";
     } else {
-        http_response_code(500);
-        echo json_encode(["error" => "Failed to create contact: " . $stmt->error]);
+        // SQL to insert data into Contacts table
+        $query = "INSERT INTO Contacts (title, firstname, lastname, email, telephone, company, type, assigned_to, created_by, created_at) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+
+        // Prepare the query
+        $stmt = $conn->prepare($query);
+        if (!$stmt) {
+            $error_message = "Error preparing query: " . $conn->error;
+        } else {
+            // Bind parameters
+            $stmt->bind_param(
+                'sssssssii',
+                $title,
+                $firstname,
+                $lastname,
+                $email,
+                $telephone,
+                $company,
+                $type,
+                $assigned_to,
+                $created_by
+            );
+
+            // Execute query
+            if ($stmt->execute()) {
+                $success_message = "New contact successfully added!";
+            } else {
+                $error_message = "Error adding contact: " . $stmt->error;
+            }
+            $stmt->close();
+        }
     }
 
-    $stmt->close();
     $conn->close();
 }
 ?>
