@@ -1,0 +1,112 @@
+/* Ensure the page layout covers full height */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Container for the entire page */
+.main-container {
+    display: flex;
+    min-height: 100vh; /* Full viewport height */
+    width: 100%;
+}
+
+/* Top header with sticky position */
+.top {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Ensure it stays above other elements */
+    background-color: #fff;
+    height: 60px; /* Match the header height */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}
+
+/* Sidebar styles */
+.side {
+    background-color: #ffffff;
+    height: 100%; /* Full height */
+    flex: 0 0 250px; /* Fixed width for sidebar */
+    position: relative;
+    padding-top: 60px; /* Space for the sticky header */
+}
+
+/* Content section */
+.content {
+    padding: 40px;
+    background-color: #8f9092; /* Slight grey color */
+    flex-grow: 1; /* Take remaining space */
+    min-height: calc(100vh - 60px); /* Full height minus the header height */
+    box-sizing: border-box; /* Include padding in height calculation */
+}
+
+/* Container for the form and content */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#conatiner-details{
+    background-color: white;
+    border: solid grey 1px;
+    border-radius: 4px;
+    margin: 16px;
+}
+
+.content-margin{
+    margin: 8px;
+}
+
+#container-notes-list{
+    background-color: white;
+    border: solid grey 1px;
+    border-radius: 4px;
+    margin: 16px;
+}
+#container-addnotes{
+    background-color: white;
+    border: solid grey 1px;
+    border-radius: 4px;
+    margin: 16px;
+}
+
+
+/* Flex layout for header (h1 and button inline) */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #004494;
+}
+
+#content_container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+
+/* Table styles */
+.note {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.note small {
+    display: block;
+    color: #666;
+    margin-top: 5px;
+}
