@@ -32,14 +32,13 @@ try {
 
 <title>Dashboard - Dolphin CRM</title>
 <link rel="stylesheet" href="css/dashboard.css">
-<script src='js/dashboard.js'></script>
 
 
 
 <!-- Header with h1 and button inline -->
 <div class="header">
     <h1>Dashboard</h1>
-    <button class="btn" onclick="window.location.href='newContact.php'">Add New Contact</button>
+    <button class="btn" onclick="loadContent('newContact.php')">Add New Contact</button>
 </div>
 <div id="content_container">
     <!-- Filter Container -->

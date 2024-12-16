@@ -23,88 +23,63 @@ try {
     exit();
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <?php include '../php/HTML-base/head.php'; ?>
-    <title>New Contact - Dolphin CRM</title>
-    <link rel="stylesheet" href="css/styles-index.css" />
-    <link rel="stylesheet" href="css/newContact.css">
-</head>
+<title>New Contact - Dolphin CRM</title>
+<link rel="stylesheet" href="css/newContact.css">
 
-<body>
-    <!-- Top Navbar -->
-    <div class="top">
-        <?php include '../php/HTML-base/navbar.php'; ?>
-    </div>
+<h1>New Contact</h1>
 
-    <div class="main-container">
-        <!-- Sidebar -->
-        <div class="side">
-            <?php include '../php/HTML-base/side-nav.php'; ?>
-        </div>
+<div class="form-container">
+    <form action="../php/API/CreateContact.php" method="POST">
+        <label for="title">Title:</label>
+        <select name="title" id="title" required>
+            <option value="Mr">Mr</option>
+            <option value="Ms">Ms</option>
+            <option value="Mrs">Mrs</option>
+        </select><br>
 
-        <!-- Main Content -->
-        <div class="content">
-            <h1>New Contact</h1>
-
-            <div class="form-container">
-                <form action="../php/API/CreateContact.php" method="POST">
-                    <label for="title">Title:</label>
-                    <select name="title" id="title" required>
-                        <option value="Mr">Mr</option>
-                        <option value="Ms">Ms</option>
-                        <option value="Mrs">Mrs</option>
-                    </select><br>
-
-                    <div id="grid-container">
-                        <div>
-                            <label for="firstname">First Name:</label>
-                            <input type="text" name="firstname" id="firstname" required><br>
-                        </div>
-
-                        <div>
-                            <label for="lastname">Last Name:</label>
-                            <input type="text" name="lastname" id="lastname" required><br>
-                        </div>
-
-                        <div>
-                            <label for="email">Email:</label>
-                            <input type="email" name="email" id="email" required><br>
-                        </div>
-                        <div>
-                            <label for="telephone">Telephone:</label>
-                            <input type="text" name="telephone" id="telephone"><br>
-                        </div>
-                        <div>
-                            <label for="company">Company:</label>
-                            <input type="text" name="company" id="company"><br>
-                        </div>
-                        <div>
-                            <label for="type">Type:</label>
-                            <select name="type" id="type" required>
-                                <option value="sales lead">Sales Lead</option>
-                                <option value="support">Support</option>
-                            </select><br>
-                        </div>
-
-                    </div>
-
-                    <label for="assigned_to">Assigned To:</label>
-                    <select name="assigned_to" id="assigned_to" required>
-                        <?php foreach ($users as $user): ?>
-                            <option value="<?= $user['id'] ?>"><?= $user['firstname'] . ' ' . $user['lastname'] ?></option>
-                        <?php endforeach; ?>
-                    </select><br>
-
-                    <div id="sbt-bt-container">
-                        <button type="submit">Add Contact</button>
-                    </div>
-                </form>
+        <div id="grid-container">
+            <div>
+                <label for="firstname">First Name:</label>
+                <input type="text" name="firstname" id="firstname" required><br>
             </div>
-        </div>
-    </div>
-</body>
 
-</html>
+            <div>
+                <label for="lastname">Last Name:</label>
+                <input type="text" name="lastname" id="lastname" required><br>
+            </div>
+
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required><br>
+            </div>
+            <div>
+                <label for="telephone">Telephone:</label>
+                <input type="text" name="telephone" id="telephone"><br>
+            </div>
+            <div>
+                <label for="company">Company:</label>
+                <input type="text" name="company" id="company"><br>
+            </div>
+            <div>
+                <label for="type">Type:</label>
+                <select name="type" id="type" required>
+                    <option value="sales lead">Sales Lead</option>
+                    <option value="support">Support</option>
+                </select><br>
+            </div>
+
+        </div>
+
+        <label for="assigned_to">Assigned To:</label>
+        <select name="assigned_to" id="assigned_to" required>
+            <?php foreach ($users as $user): ?>
+                <option value="<?= $user['id'] ?>"><?= $user['firstname'] . ' ' . $user['lastname'] ?></option>
+            <?php endforeach; ?>
+        </select><br>
+
+        <div id="sbt-bt-container">
+            <button type="submit">Add Contact</button>
+        </div>
+    </form>
+</div>
