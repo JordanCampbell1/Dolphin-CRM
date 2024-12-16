@@ -33,25 +33,52 @@ html, body {
 /* Content section */
 .content {
     padding: 40px;
-    background-color: #8f9092; /* Slight grey color */
+    background-color: #D3D3D3; /* Slight grey color */
     flex-grow: 1; /* Take remaining space */
     min-height: calc(100vh - 60px); /* Full height minus the header height */
     box-sizing: border-box; /* Include padding in height calculation */
 }
 
+#avatar{
+    width: 48px;
+    margin-right: 4px;
+
+}
+
 /* Container for the form and content */
 .container {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 8px;
 }
 
-#conatiner-details{
+#detail{
+    margin-left: 48px;
+}
+
+
+#conatiner-details {
     background-color: white;
     border: solid grey 1px;
     border-radius: 4px;
-    margin: 16px;
+    margin: 8px;
+    padding: 16px;
 }
 
+.content-margin_dif{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+    gap: 40px; /* Space between columns */
+}
+.label {
+    margin: 8px;
+    color: grey;
+    margin-bottom: 4px; /* Space between label and content */
+}
+
+.field {
+    display: flex;
+    flex-direction: column; /* Stack label above content */
+}
 .content-margin{
     margin: 8px;
 }
@@ -60,34 +87,74 @@ html, body {
     background-color: white;
     border: solid grey 1px;
     border-radius: 4px;
-    margin: 16px;
+    margin: 32px;
+    padding: 16px;
 }
 #container-addnotes{
     background-color: white;
     border: solid grey 1px;
     border-radius: 4px;
-    margin: 16px;
+    margin-left: 32px;
 }
 
 
-/* Flex layout for header (h1 and button inline) */
-.header {
+#top_or_head {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Place items at the edges of the container */
+    align-items: center; /* Align vertically */
 }
 
 .btn {
     background-color: #0056b3;
     color: white;
     padding: 10px 20px;
+    margin: 0; /* Remove any margin */
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    box-sizing: border-box; /* Ensure padding and border are included */
+    line-height: 1; /* Avoid unexpected space due to line-height */
 }
 
 .btn:hover {
     background-color: #004494;
+}
+
+#button-group {
+    margin-left: 40px;
+    display: flex;
+    gap: 10px; /* Space between buttons */
+}
+
+.btn-assign, .btn-switch {
+    padding: 10px;
+    font-size: 14px;
+    display: inline-flex; /* Ensure proper alignment */
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Space between icon and text */
+    margin: 0; /* Remove default margins */
+    border: none; /* Ensure no browser-specific borders */
+    box-sizing: border-box;
+}
+
+.btn-assign {
+    background-color: green;
+}
+
+.btn-switch {
+    background-color: orange;
+}
+
+.btn-assign img, .btn-switch img {
+    width: 16px;
+}
+
+.btn-assign img{
+    width: 16px;
+}
+.btn-switch img{
+    width: 16px;
 }
 
 #content_container {
@@ -95,6 +162,16 @@ html, body {
     border-radius: 8px;
     padding: 20px;
 }
+textarea {
+    width: 1200px; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+    font-size: 16px; /* Optional: Set the font size */
+    padding: 10px; /* Optional: Add padding for better appearance */
+    border: 1px solid #ccc; /* Optional: Border styling */
+    border-radius: 8px; /* Optional: Rounded corners */
+    resize: none; /* Optional: Prevent resizing */
+}
+
 
 
 /* Table styles */
