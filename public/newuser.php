@@ -47,60 +47,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn = null;
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <?php include '../php/HTML-base/head.php'; ?>
-    <title>Add New User - Dolphin CRM</title>
-    <link rel="stylesheet" href="css/styles-index.css" />
-    <link rel="stylesheet" href="css/newuser.css">
-</head>
-<body>
-    <div class="top">
-        <?php include '../php/HTML-base/navbar.php'; ?>
-    </div>
 
-    <div class="main-container">
-        <div class="side">
-            <?php include '../php/HTML-base/side-nav.php'; ?>
+<title>Add New User - Dolphin CRM</title>
+<link rel="stylesheet" href="css/newuser.css">
+
+
+
+<div class="content-header">
+    <h1>Add New User</h1>
+</div>
+
+<div class="form-container">
+    <form action="" method="POST">
+        <div class="form-group">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" name="first_name" required>
         </div>
-
-        <div class="content">
-            <div class="content-header">
-                <h1>Add New User</h1>
-            </div>
-
-            <div class="form-container">
-                <form action="" method="POST">
-                    <div class="form-group">
-                        <label for="first-name">First Name</label>
-                        <input type="text" id="first-name" name="first_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="last-name">Last Name</label>
-                        <input type="text" id="last-name" name="last_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <select id="role" name="role" required>
-                            <option value="Member">Member</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit">Save</button>
-                    </div>
-                </form>
-            </div>
+        <div class="form-group">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" name="last_name" required>
         </div>
-    </div>
-</body>
-</html>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+                <option value="Member">Member</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>

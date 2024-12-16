@@ -32,7 +32,7 @@ try {
 <link rel="stylesheet" href="css/users.css">
 <div class="content-header">
     <h1>Users</h1>
-    <a href="newuser.php" class="add-user-btn">Add User</a>
+    <a href="#" onclick="loadContent('newuser.php')" class="add-user-btn">Add User</a>
 </div>
 
 <div class="table-container">
