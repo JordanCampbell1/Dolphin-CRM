@@ -20,7 +20,7 @@ $contactId = $_GET['id'] ?? null;
 if (!$contactId) {
     die('No contact ID provided.');
 }
-
+//comment
 // SQL query
 $sql = "
     SELECT 
