@@ -360,7 +360,7 @@ foreach ($results as $row) {
         //
         function assignToMe(contactId) {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "assigntome.php", true);
+            xhr.open("POST", "../php/setup/assigntome.php", true);
             xhr.onreadystatechange = function() {
                 if (this.readyState === 4 && this.status === 200) {
                     alert("Contact assigned to you successfully.");
@@ -375,7 +375,7 @@ foreach ($results as $row) {
         function switchRole(contactId, currentRole) {
             var newRole = (currentRole === 'Sales Lead') ? 'Support' : 'Sales Lead';
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "switchrole.php", true);
+            xhr.open("POST", "../php/setup/switchrole.php", true);
             xhr.onreadystatechange = function() {
                 if (this.readyState === 4 && this.status === 200) {
                     alert("Role switched successfully.");
