@@ -189,19 +189,22 @@ foreach ($results as $row) {
             align-items: center; /* Align vertically */
         }
 
-
         .btn {
             background-color: #0056b3;
             color: white;
             padding: 10px 20px;
+            margin: 0; /* Remove any margin */
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            box-sizing: border-box; /* Ensure padding and border are included */
+            line-height: 1; /* Avoid unexpected space due to line-height */
         }
 
         .btn:hover {
             background-color: #004494;
         }
+
         #button-group {
             margin-left: 40px;
             display: flex;
@@ -211,17 +214,27 @@ foreach ($results as $row) {
         .btn-assign, .btn-switch {
             padding: 10px;
             font-size: 14px;
-            display: flex;
+            display: inline-flex; /* Ensure proper alignment */
             align-items: center;
             justify-content: center;
             gap: 5px; /* Space between icon and text */
+            margin: 0; /* Remove default margins */
+            border: none; /* Ensure no browser-specific borders */
+            box-sizing: border-box;
         }
-        .btn-assign{
+
+        .btn-assign {
             background-color: green;
         }
-        .btn-switch{
+
+        .btn-switch {
             background-color: orange;
         }
+
+        .btn-assign img, .btn-switch img {
+            width: 16px;
+        }
+
         .btn-assign img{
             width: 16px;
         }
