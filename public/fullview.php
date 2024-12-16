@@ -113,25 +113,52 @@ foreach ($results as $row) {
         /* Content section */
         .content {
             padding: 40px;
-            background-color: #8f9092; /* Slight grey color */
+            background-color: #D3D3D3; /* Slight grey color */
             flex-grow: 1; /* Take remaining space */
             min-height: calc(100vh - 60px); /* Full height minus the header height */
             box-sizing: border-box; /* Include padding in height calculation */
         }
 
+        #avatar{
+            width: 48px;
+            margin-right: 4px;
+
+        }
+
         /* Container for the form and content */
         .container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 8px;
         }
+        
+        #detail{
+            margin-left: 48px;
+        }
+        
 
-        #conatiner-details{
+        #conatiner-details {
             background-color: white;
             border: solid grey 1px;
             border-radius: 4px;
-            margin: 16px;
+            margin: 8px;
+            padding: 16px;
         }
-        
+
+        .content-margin_dif{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+            gap: 40px; /* Space between columns */
+        }
+        .label {
+            margin: 8px;
+            color: grey;
+            margin-bottom: 4px; /* Space between label and content */
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column; /* Stack label above content */
+        }
         .content-margin{
             margin: 8px;
         }
@@ -140,22 +167,23 @@ foreach ($results as $row) {
             background-color: white;
             border: solid grey 1px;
             border-radius: 4px;
-            margin: 16px;
+            margin: 32px;
+            padding: 16px;
         }
         #container-addnotes{
             background-color: white;
             border: solid grey 1px;
             border-radius: 4px;
-            margin: 16px;
+            margin-left: 32px;
         }
         
 
-        /* Flex layout for header (h1 and button inline) */
-        .header {
+        #top_or_head {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: space-between; /* Place items at the edges of the container */
+            align-items: center; /* Align vertically */
         }
+
 
         .btn {
             background-color: #0056b3;
@@ -169,12 +197,48 @@ foreach ($results as $row) {
         .btn:hover {
             background-color: #004494;
         }
+        #button-group {
+            margin-left: 40px;
+            display: flex;
+            gap: 10px; /* Space between buttons */
+        }
+
+        .btn-assign, .btn-switch {
+            padding: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px; /* Space between icon and text */
+        }
+        .btn-assign{
+            background-color: green;
+        }
+        .btn-switch{
+            background-color: orange;
+        }
+        .btn-assign img{
+            width: 16px;
+        }
+        .btn-switch img{
+            width: 16px;
+        }
 
         #content_container {
             background-color: #ffffff;
             border-radius: 8px;
             padding: 20px;
         }
+        textarea {
+            width: 1200px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            font-size: 16px; /* Optional: Set the font size */
+            padding: 10px; /* Optional: Add padding for better appearance */
+            border: 1px solid #ccc; /* Optional: Border styling */
+            border-radius: 8px; /* Optional: Rounded corners */
+            resize: none; /* Optional: Prevent resizing */
+        }
+
 
 
         /* Table styles */
@@ -210,25 +274,48 @@ foreach ($results as $row) {
         <div class="content">
             <div class="container">
                 <?php if ($contact): ?>
-                    <h2><?php echo htmlspecialchars($contact['title'].'.'.$contact['firstname'] . ' ' . $contact['lastname']); ?></h2>
-                    <p>Created on  <?php echo htmlspecialchars($contact['created_at']); ?></p> by <?php echo htmlspecialchars($contact['created_by']); ?> </p>
-                    <p>Updated on <?php echo htmlspecialchars($contact['updated_at']); ?></p>
-
-                    <div id="conatiner-details">
-                        <div class="content-margin">
-                            <p class="label">Email</p>
-                            <p><?php echo htmlspecialchars($contact['email']); ?></p>
-
-                            <p class="label">Telephone</p>
-                            <p><?php echo htmlspecialchars($contact['telephone']); ?></p>
-
-                            <p class="label">Company</p>
-                            <p><?php echo htmlspecialchars($contact['company']); ?></p>
-
-                            <p class="label">Assigned To</p>
-                            <p><?php echo htmlspecialchars($contact['created_by']); ?></p>
-                        
+                    <div id="top_or_head">   
+                        <div id="top-left">
+                            <h2><img id="avatar" src="images/Avatar.png" alt="user avatar"><?php echo htmlspecialchars($contact['title'].'.'.$contact['firstname'] . ' ' . $contact['lastname']); ?></h2>
+                            <div id="detail">
+                                <p>Created on  <?php echo htmlspecialchars($contact['created_at']); ?> by <?php echo htmlspecialchars($contact['created_by']); ?> </p>
+                                <p>Updated on <?php echo htmlspecialchars($contact['updated_at']); ?></p>
+                            </div>
                         </div>
+                        <div id="button-group">
+                            <?php
+                                // Determine the next type based on the current type
+                                $nextType = ($contact['type'] === 'sales lead') ? 'support' : 'sales lead';
+                            ?>
+                            <button type="button" class="btn-assign" onclick="assignToMe(<?php echo htmlspecialchars($contact['id']); ?>)">
+                                <img src="images/palm-of-hand.png"> Assign to me
+                            </button>
+                            <button type="button" class="btn-switch" onclick="switchRole(<?php echo htmlspecialchars($contact['id']); ?>, '<?php echo htmlspecialchars($contact['type']); ?>')">
+                                <img src="images/swap.png"> Switch to <?php echo htmlspecialchars($nextType); ?>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="conatiner-details">
+                        <div class="content-margin_dif">
+                            <div class="field">
+                                <p class="label">Email</p>
+                                <p><?php echo htmlspecialchars($contact['email']); ?></p>
+                            </div>
+                            <div class="field">
+                                <p class="label">Telephone</p>
+                                <p><?php echo htmlspecialchars($contact['telephone']); ?></p>
+                            </div>
+                            <div class="field">
+                                <p class="label">Company</p>
+                                <p><?php echo htmlspecialchars($contact['company']); ?></p>
+                            </div>
+                            <div class="field">
+                                <p class="label">Assigned To</p>
+                                <p><?php echo htmlspecialchars($contact['created_by']); ?></p>
+                            </div>
+                        </div>
+                    </div>
+
                     </div>
                     <div id="container-notes-list">
                         <div class="content-margin">
@@ -253,9 +340,9 @@ foreach ($results as $row) {
                         <div class="content-margin">
                             <h6>Add a note about <?php echo htmlspecialchars($contact['firstname']); ?></h6>
                             <form action="add_note.php" method="POST" id="note-form">
-                                <textarea name="note_comment" placeholder="Enter your note here..." onkeypress="submitOnEnter(event)"></textarea>
-                                <button type="submit" class="btn">Add Note</button>
+                                <textarea name="note_comment" placeholder="Enter your note here..." onkeypress="submitOnEnter(event)"></textarea>       
                             </form>
+                            <button type="submit" class="btn">Add Note</button>
                         </div>
 
                     </div>
@@ -268,6 +355,37 @@ foreach ($results as $row) {
                 event.preventDefault(); // Prevent the default "Enter" key behavior (new line)
                 document.getElementById('note-form').submit(); // Submit the form
             }
+        }
+
+        //
+        function assignToMe(contactId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "assigntome.php", true);
+            xhr.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    alert("Contact assigned to you successfully.");
+                    
+                }
+            };
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("id=" + encodeURIComponent(contactId));
+            location.reload(); 
+        }
+        
+        function switchRole(contactId, currentRole) {
+            var newRole = (currentRole === 'Sales Lead') ? 'Support' : 'Sales Lead';
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "switchrole.php", true);
+            xhr.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    alert("Role switched successfully.");
+
+                }
+            };
+
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("id=" + encodeURIComponent(contactId) + "&type=" + encodeURIComponent(newRole));
+            location.reload();
         }
     </script>
 
