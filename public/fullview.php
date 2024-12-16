@@ -25,9 +25,7 @@ if (!$contactId) {
 $sql = "
     SELECT 
         c.id, c.title, c.firstname, c.lastname, c.email, c.telephone, c.company, c.type, 
-        c.created_at, c.updated_at,
-        u.firstname AS created_by_firstname, u.lastname AS created_by_lastname,
-        n.comment AS note_comment, n.created_at AS note_created_at
+        c.assigned_to, c.created_by,c.created_at,c.updated_at
     FROM Contacts c
     LEFT JOIN Users u ON c.created_by = u.id
     LEFT JOIN Notes n ON c.id = n.contact_id
@@ -57,9 +55,10 @@ foreach ($results as $row) {
             'telephone' => $row['telephone'],
             'company' => $row['company'],
             'type' => $row['type'],
+            'assigned_to' => $row['assigned_to'],
+            'created_by' => $row['created_by'],
             'created_at' => $row['created_at'],
-            'updated_at' => $row['updated_at'],
-            'created_by' => $row['created_by_firstname'] . ' ' . $row['created_by_lastname']
+             'updated_at'=>$row['updated_at']
         ];
     }
     if (!empty($row['note_comment'])) {
@@ -273,7 +272,9 @@ foreach ($results as $row) {
 
         <div class="content">
             <div class="container">
-                <?php if ($contact): ?>
+                <?php if ($contact): 
+                    
+                    ?>
                     <div id="top_or_head">   
                         <div id="top-left">
                             <h2><img id="avatar" src="images/Avatar.png" alt="user avatar"><?php echo htmlspecialchars($contact['title'].'.'.$contact['firstname'] . ' ' . $contact['lastname']); ?></h2>
@@ -286,11 +287,12 @@ foreach ($results as $row) {
                             <?php
                                 // Determine the next type based on the current type
                                 $nextType = ($contact['type'] === 'sales lead') ? 'support' : 'sales lead';
+                                
                             ?>
-                            <button type="button" class="btn-assign" onclick="assignToMe(<?php echo htmlspecialchars($contact['id']); ?>)">
+                            <button type="button" class="btn-assign" onclick="assigntome(<?php echo htmlspecialchars($contact['id']); ?>)">
                                 <img src="images/palm-of-hand.png"> Assign to me
                             </button>
-                            <button type="button" class="btn-switch" onclick="switchRole(<?php echo htmlspecialchars($contact['id']); ?>, '<?php echo htmlspecialchars($contact['type']); ?>')">
+                            <button type="button" class="btn-switch" onclick="switchrole(<?php echo htmlspecialchars($contact['id']); ?>, '<?php echo htmlspecialchars($contact['type']); ?>')">
                                 <img src="images/swap.png"> Switch to <?php echo htmlspecialchars($nextType); ?>
                             </button>
                         </div>
@@ -311,7 +313,7 @@ foreach ($results as $row) {
                             </div>
                             <div class="field">
                                 <p class="label">Assigned To</p>
-                                <p><?php echo htmlspecialchars($contact['created_by']); ?></p>
+                                <p><?php echo htmlspecialchars($contact['assigned_to']); ?></p>
                             </div>
                         </div>
                     </div>
@@ -350,44 +352,48 @@ foreach ($results as $row) {
         </div>
     </div>
     <script>
-        function submitOnEnter(event) {
-            if (event.key === 'Enter' && !event.shiftKey) { // Check if "Enter" key is pressed without Shift
-                event.preventDefault(); // Prevent the default "Enter" key behavior (new line)
-                document.getElementById('note-form').submit(); // Submit the form
+       
+        function assigntome(contactId) {
+        console.log('Assign to me clicked', contactId);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "../php/setup/assigntome.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            console.log('Ready state:', this.readyState, 'Status:', this.status);
+            if (this.readyState === 4) {
+                console.log('Response:', this.responseText);
+                if (this.status === 200) {
+                    alert("Contact assigned successfully");
+                    location.reload();
+                } else {
+                    alert("Error assigning contact: " + this.responseText);
+                }
             }
-        }
+        };
+        xhr.send("id=" + encodeURIComponent(contactId));
+    }
 
-        //
-        function assignToMe(contactId) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "../php/setup/assigntome.php", true);
-            xhr.onreadystatechange = function() {
-                if (this.readyState === 4 && this.status === 200) {
-                    alert("Contact assigned to you successfully.");
-                    
+    function switchrole(contactId, currentType) {
+        console.log('Switch role clicked', contactId, currentType);
+        var newType = (currentType === 'sales lead') ? 'support' : 'sales lead';
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "../php/setup/switchrole.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            console.log('Ready state:', this.readyState, 'Status:', this.status);
+            if (this.readyState === 4) {
+                console.log('Response:', this.responseText);
+                if (this.status === 200) {
+                    alert("Role switched successfully");
+                    location.reload();
+                } else {
+                    alert("Error switching role: " + this.responseText);
                 }
-            };
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("id=" + encodeURIComponent(contactId));
-            location.reload(); 
-        }
-        
-        function switchRole(contactId, currentRole) {
-            var newRole = (currentRole === 'Sales Lead') ? 'Support' : 'Sales Lead';
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "../php/setup/switchrole.php", true);
-            xhr.onreadystatechange = function() {
-                if (this.readyState === 4 && this.status === 200) {
-                    alert("Role switched successfully.");
-
-                }
-            };
-
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("id=" + encodeURIComponent(contactId) + "&type=" + encodeURIComponent(newRole));
-            location.reload();
-        }
-    </script>
-
+            }
+        };
+        xhr.send("id=" + encodeURIComponent(contactId) + "&type=" + encodeURIComponent(newType));
+    }
+</script>
+    
 </body>
 </html>

@@ -1,37 +1,47 @@
 <?php
-session_start();  
-
-// Set the user ID in the session (for testing purposes)
-//$_SESSION['user_id'] = '1'; // Ensure this is stored during login
-
-$host = 'localhost';
-$username = 'user123';
-$password = 'password123';
-$dbname = 'dolphin_crm';
+session_start();
+require_once '../config.php';
 
 try {
     // Database connection
-    $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
 
-    // Get the contact ID and new role from the POST data
+    // Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        throw new Exception("User not logged in");
+    }
+
+    // Check if contact ID and type are provided via POST
+    if (!isset($_POST['id']) || !isset($_POST['type'])) {
+        throw new Exception("No contact ID or type provided");
+    }
+
     $contactId = $_POST['id'];
-    $newRole = $_POST['type'];
+    $newType = $_POST['type'];
 
-    // Update the role and updated_at fields in the contacts table
-    $stmt = $conn->prepare("UPDATE contacts SET type = :new_role, updated_at = NOW() WHERE id = :contact_id");
-    $stmt->execute([
-        'new_role' => $newRole,
+    // Prepare and execute update
+    $stmt = $pdo->prepare("UPDATE Contacts SET type = :new_type, updated_at = NOW() WHERE id = :contact_id");
+    $result = $stmt->execute([
+        'new_type' => $newType,
         'contact_id' => $contactId
     ]);
 
-    // Log a debug message on successful query execution
-    $debugMessage = "Query executed successfully. Contact ID: $contactId updated to role: $newRole";
-    file_put_contents('debug.log', date('Y-m-d H:i:s') . ' ' . $debugMessage . PHP_EOL, FILE_APPEND);
-
-} catch (PDOException $e) {
-    // Log the error message
-    $errorMessage = "Error: " . $e->getMessage();
-    file_put_contents('error.log', date('Y-m-d H:i:s') . ' ' . $errorMessage . PHP_EOL, FILE_APPEND);
+    if ($result) {
+        echo json_encode(['success' => true, 'message' => 'Contact type switched successfully']);
+        exit;
+    } else {
+        throw new Exception("Failed to switch contact type");
+    }
+} catch (Exception $e) {
+    // Log the error
+    error_log(date('[Y-m-d H:i:s] ') . $e->getMessage() . PHP_EOL, 3, 'error.log');
+    
+    // Send error response
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    exit;
 }
 ?>

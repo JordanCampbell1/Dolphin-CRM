@@ -1,0 +1,18 @@
+2024-12-16 03:14:36 Error: SQLSTATE[HY000] [1045] Access denied for user 'user123'@'localhost' (using password: YES)
+2024-12-16 03:18:54 Error: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)
+2024-12-16 03:18:56 Error: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)
+2024-12-16 03:19:05 Error: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)
+2024-12-16 03:19:06 Error: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)
+2024-12-16 03:19:06 Error: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)
+[2024-12-16 03:45:40] User not logged in
+[2024-12-16 03:45:51] User not logged in
+[2024-12-16 03:47:33] No contact ID provided
+[2024-12-16 03:48:02] No contact ID provided
+[2024-12-16 03:51:06] No contact ID provided
+[2024-12-16 03:53:55] No contact ID provided
+[2024-12-16 03:55:10] No contact ID provided
+[2024-12-16 03:56:24] No contact ID found in session
+[2024-12-16 04:01:10] No contact ID found in session
+[2024-12-16 04:01:20] No contact ID found in session
+[2024-12-16 04:03:33] No contact ID found in session
+[2024-12-16 04:03:40] No contact ID found in session
