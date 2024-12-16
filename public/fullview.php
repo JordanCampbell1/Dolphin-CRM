@@ -20,17 +20,23 @@ $contactId = $_GET['id'] ?? null;
 if (!$contactId) {
     die('No contact ID provided.');
 }
-//comment
+
 // SQL query
 $sql = "
     SELECT 
         c.id, c.title, c.firstname, c.lastname, c.email, c.telephone, c.company, c.type, 
-        c.assigned_to, c.created_by,c.created_at,c.updated_at
+        c.assigned_to, 
+        IFNULL(CONCAT(u2.firstname, ' ', u2.lastname), 'Not Assigned') AS assigned_to_fullname,
+        c.created_by, c.created_at, c.updated_at,
+        IFNULL(CONCAT(u.firstname, ' ', u.lastname), 'Unknown') AS created_by_fullname
     FROM Contacts c
     LEFT JOIN Users u ON c.created_by = u.id
+    LEFT JOIN Users u2 ON c.assigned_to = u2.id
     LEFT JOIN Notes n ON c.id = n.contact_id
     WHERE c.id = :id
 ";
+
+
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['id' => $contactId]);
@@ -55,10 +61,10 @@ foreach ($results as $row) {
             'telephone' => $row['telephone'],
             'company' => $row['company'],
             'type' => $row['type'],
-            'assigned_to' => $row['assigned_to'],
-            'created_by' => $row['created_by'],
+            'assigned_to' => $row['assigned_to_fullname'], // Use the full name here
+            'created_by' => $row['created_by_fullname'],
             'created_at' => $row['created_at'],
-             'updated_at'=>$row['updated_at']
+            'updated_at' => $row['updated_at']
         ];
     }
     if (!empty($row['note_comment'])) {
