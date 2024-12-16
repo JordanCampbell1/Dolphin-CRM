@@ -257,12 +257,13 @@
                 <div id="content_container">
                     <!-- Filter Container -->
                     <div id="filter-container">
-                        <span id="filtertxt"><img src="../public/images/filter.png" alt="home ico"> Filter By:</span>
-                        <span class="filter-option" data-filter="all">All</span>
-                        <span class="filter-option" data-filter="sales leads">Sales Leads</span>
-                        <span class="filter-option" data-filter="support">Support</span>
-                        <span class="filter-option" data-filter="assigned">Assigned to me</span>
-                    </div>
+    <span id="filtertxt"><img src="../public/images/filter.png" alt="filter icon"> Filter By:</span>
+    <a class="filter-option" href="dashboard.php?filter=all" data-filter="all">All</a>
+    <a class="filter-option" href="dashboard.php?filter=sales leads" data-filter="sales leads">Sales Leads</a>
+    <a class="filter-option" href="dashboard.php?filter=support" data-filter="support">Support</a>
+    <a class="filter-option" href="dashboard.php?filter=assigned_to_me" data-filter="assigned">Assigned To Me</a>
+</div>
+
 
                     <!-- Table wrapped in a white background container -->
                     <div class="table-container">
@@ -278,9 +279,31 @@
                             <tbody id="contacts-table-body">
                                 <?php
                                 try {
-                                    $stmt = $conn->query("SELECT id, title, CONCAT(firstname, ' ', lastname) AS full_name, email, company, type, assigned_to FROM Contacts");
-                                    $stmt->execute();
-                                    $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+                                     $userId = $_SESSION['user_id']; // Assuming logged-in user ID is stored in the session
+
+                                        // Base query to fetch all contacts
+                                        $sql = "SELECT id, title, CONCAT(firstname, ' ', lastname) AS full_name, email, company, type, assigned_to FROM Contacts";
+
+                                        // Apply conditions based on the selected filter
+                                        if ($filter === 'sales leads') {
+                                            $sql .= " WHERE type = 'sales lead'";
+                                        } elseif ($filter === 'support') {
+                                            $sql .= " WHERE type = 'support'";
+                                        } elseif ($filter === 'assigned_to_me') {
+                                            $sql .= " WHERE assigned_to = :userId";
+                                        }
+
+                                        $stmt = $conn->prepare($sql);
+
+                                        // Bind parameters if necessary
+                                        if ($filter === 'assigned_to_me') {
+                                            $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+                                        }
+
+                                        // Execute the query
+                                        $stmt->execute();
+                                        $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                     foreach ($contacts as $contact) {
                                         $typeClass = strtolower(str_replace(' ', '-', $contact['type']));
