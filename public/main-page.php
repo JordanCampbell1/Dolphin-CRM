@@ -4,7 +4,6 @@
 <head>
     <?php include '../php/HTML-base/head.php';    ?>
     <link rel="stylesheet" href="css/styles-index.css" />
-    <script src="/public/js/navigation.js"></script>
 </head>
 
 <body>
@@ -17,16 +16,18 @@
     </div>
 
     <div class="main-container">
+
         <div class="side">
             <?php include '../php/HTML-base/side-nav.php'; ?>
         </div>
 
-
-        <div id="main-content-container">
-
+        <div class="content">
+            <div class="container">
+                <div id="main-content-container">
+                    <?php include 'dashboard.php' ?>
+                </div>
+            </div>
         </div>
-
-
     </div>
 </body>
 
