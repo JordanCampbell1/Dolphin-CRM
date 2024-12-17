@@ -11,8 +11,24 @@ function loadContent(url) {
       return response.text();
     })
     .then((data) => {
-      // Replace the main content with the fetched content
-      mainContent.innerHTML = data;
+      // Create a temporary container to parse the fetched content
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = data;
+
+      // Extract and execute any script tags
+      const scripts = tempDiv.querySelectorAll("script");
+      scripts.forEach((script) => {
+        const newScript = document.createElement("script");
+        if (script.src) {
+          newScript.src = script.src; // Copy external script src
+        } else {
+          newScript.textContent = script.textContent; // Inline script
+        }
+        document.body.appendChild(newScript);
+      });
+
+      // Replace the content of the main container
+      mainContent.innerHTML = tempDiv.innerHTML;
     })
     .catch((error) => {
       console.error("Error loading content:", error);

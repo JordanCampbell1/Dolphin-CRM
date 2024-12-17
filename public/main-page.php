@@ -24,6 +24,7 @@
 
         <div class="content">
             <div class="container">
+
                 <div id="main-content-container">
                     <?php include 'dashboard.php' ?>
                 </div>
