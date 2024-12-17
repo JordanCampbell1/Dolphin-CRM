@@ -1,5 +1,11 @@
+let URLHistory; 
+
 function loadContent(url) {
   console.log("hit navigation");
+  console.log("this is the current url: ", url);
+
+  URLHistory = url; //changes to the latest URL at the point of browsing
+
   const mainContent = document.getElementById("main-content-container");
 
   // Fetch the content from the server
@@ -35,4 +41,13 @@ function loadContent(url) {
       mainContent.innerHTML =
         "<p>Sorry, an error occurred while loading the content.</p>";
     });
+}
+
+// const reloadPage = () => {
+
+// }
+
+function reloadPage(){
+  console.log("page reload function called");
+  loadContent(URLHistory);
 }

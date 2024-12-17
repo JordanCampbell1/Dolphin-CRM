@@ -78,7 +78,7 @@ try {
                                                 <td>
                                                     <div class='type-action-container'>
                                                         <span class='type-container {$typeClass}'>{$contact['type']}</span>
-                                                        <a class='view-link' href='fullview.php?id={$contact['id']}'>View</a>
+                                                        <a class='view-link' onclick='loadContent(`fullview.php?id={$contact['id']}`)'>View</a>
                                                     </div>
                                                 </td>
                                             </tr>";
