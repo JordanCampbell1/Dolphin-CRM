@@ -85,103 +85,90 @@ foreach ($results as $row) {
     <?php include '../php/HTML-base/head.php'; ?>
     <title>Contact Details - Dolphin CRM</title>
     <link rel="stylesheet" href="css/styles-index.css" />
-    <link rel="stylesheet" href="css/fullview.css">
+    <link rel="stylesheet" href="css/fullview.css" />
+    <script src="js/showNote.js"></script>
 </head>
 <body>
-
-    <div class="top">
-        <?php
-        $headerClass = 'secondary-header';
-        $headerId = 'header2';
-        include '../php/HTML-base/navbar.php'; 
-        ?>    
-    </div>
-
-    <div class="main-container">
-        <div class="side">
-            <?php include '../php/HTML-base/side-nav.php'; ?>
-        </div>
-
-        <div class="content">
-            <div class="container">
-                <?php if ($contact): 
-                    
-                    ?>
-                    <div id="top_or_head">   
-                        <div id="top-left">
-                            <h2><img id="avatar" src="images/Avatar.png" alt="user avatar"><?php echo htmlspecialchars($contact['title'].'.'.$contact['firstname'] . ' ' . $contact['lastname']); ?></h2>
-                            <div id="detail">
-                                <p>Created on  <?php echo htmlspecialchars($contact['created_at']); ?> by <?php echo htmlspecialchars($contact['created_by']); ?> </p>
-                                <p>Updated on <?php echo htmlspecialchars($contact['updated_at']); ?></p>
-                            </div>
+    <div class="content">
+        <div class="container">
+            <?php if ($contact): 
+                
+                ?>
+                <div id="top_or_head">   
+                    <div id="top-left">
+                        <h2><img id="avatar" src="images/Avatar.png" alt="user avatar"><?php echo htmlspecialchars($contact['title'].'.'.$contact['firstname'] . ' ' . $contact['lastname']); ?></h2>
+                        <div id="detail">
+                            <p>Created on  <?php echo htmlspecialchars($contact['created_at']); ?> by <?php echo htmlspecialchars($contact['created_by']); ?> </p>
+                            <p>Updated on <?php echo htmlspecialchars($contact['updated_at']); ?></p>
                         </div>
-                        <div id="button-group">
-                            <?php
-                                // Determine the next type based on the current type
-                                $nextType = ($contact['type'] === 'sales lead') ? 'support' : 'sales lead';
+                    </div>
+                    <div id="button-group">
+                        <?php
+                            // Determine the next type based on the current type
+                            $nextType = ($contact['type'] === 'sales lead') ? 'support' : 'sales lead';
+                            
+                        ?>
+                        <button type="button" class="btn-assign" onclick="assigntome(<?php echo htmlspecialchars($contact['id']); ?>)">
+                            <img src="images/palm-of-hand.png"> Assign to me
+                        </button>
+                        <button type="button" class="btn-switch" onclick="switchrole(<?php echo htmlspecialchars($contact['id']); ?>, '<?php echo htmlspecialchars($contact['type']); ?>')">
+                            <img src="images/swap.png"> Switch to <?php echo htmlspecialchars($nextType); ?>
+                        </button>
+                    </div>
+                </div>
+                <div id="conatiner-details">
+                    <div class="content-margin_dif">
+                        <div class="field">
+                            <p class="label">Email</p>
+                            <p><?php echo htmlspecialchars($contact['email']); ?></p>
+                        </div>
+                        <div class="field">
+                            <p class="label">Telephone</p>
+                            <p><?php echo htmlspecialchars($contact['telephone']); ?></p>
+                        </div>
+                        <div class="field">
+                            <p class="label">Company</p>
+                            <p><?php echo htmlspecialchars($contact['company']); ?></p>
+                        </div>
+                        <div class="field">
+                            <p class="label">Assigned To</p>
+                            <p><?php echo htmlspecialchars($contact['assigned_to']); ?></p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div id="container-notes-list" data-contact-id="<?php echo $contact['id']; ?>">
+                    <div class="content-margin">
+                        <h5>Notes</h5>
+
+                        <?php if (!empty($notes)): ?>
+                            <?php foreach ($notes as $note): ?>
+                                <div class="note">
+                                    <p><?php echo nl2br(htmlspecialchars($note['comment'])); ?></p>
+                                    <small>Created at: <?php echo htmlspecialchars($note['created_at']); ?></small>
+                                </div>
                                 
-                            ?>
-                            <button type="button" class="btn-assign" onclick="assigntome(<?php echo htmlspecialchars($contact['id']); ?>)">
-                                <img src="images/palm-of-hand.png"> Assign to me
-                            </button>
-                            <button type="button" class="btn-switch" onclick="switchrole(<?php echo htmlspecialchars($contact['id']); ?>, '<?php echo htmlspecialchars($contact['type']); ?>')">
-                                <img src="images/swap.png"> Switch to <?php echo htmlspecialchars($nextType); ?>
-                            </button>
-                        </div>
+                            <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>No notes available for this contact.</p>
+                            <?php endif; ?>
+                            <?php else: ?>
+                                <p>Contact not found.</p>
+                            <?php endif; ?>
+                            
                     </div>
-                    <div id="conatiner-details">
-                        <div class="content-margin_dif">
-                            <div class="field">
-                                <p class="label">Email</p>
-                                <p><?php echo htmlspecialchars($contact['email']); ?></p>
-                            </div>
-                            <div class="field">
-                                <p class="label">Telephone</p>
-                                <p><?php echo htmlspecialchars($contact['telephone']); ?></p>
-                            </div>
-                            <div class="field">
-                                <p class="label">Company</p>
-                                <p><?php echo htmlspecialchars($contact['company']); ?></p>
-                            </div>
-                            <div class="field">
-                                <p class="label">Assigned To</p>
-                                <p><?php echo htmlspecialchars($contact['assigned_to']); ?></p>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div id="container-notes-list" data-contact-id="<?php echo $contact['id']; ?>">
-                        <div class="content-margin">
-                            <h5>Notes</h5>
-
-                            <?php if (!empty($notes)): ?>
-                                <?php foreach ($notes as $note): ?>
-                                    <div class="note">
-                                        <p><?php echo nl2br(htmlspecialchars($note['comment'])); ?></p>
-                                        <small>Created at: <?php echo htmlspecialchars($note['created_at']); ?></small>
-                                    </div>
-                                    
-                                <?php endforeach; ?>
-                                <?php else: ?>
-                                   <p>No notes available for this contact.</p>
-                                <?php endif; ?>
-                                <?php else: ?>
-                                    <p>Contact not found.</p>
-                                <?php endif; ?>
-                                
-                        </div>
-                    </div>
-                    <div id="container-add-notes">
-        <div class="content-margin">
-            <h6>Add a note about <?php echo htmlspecialchars($contact['firstname']); ?></h6>
-            
-            <form action="" method="POST" id="note-form">
-                <textarea id="note-comment" name="note_comment" placeholder="Enter your note here..." onkeypress="submitOnEnter(event)"></textarea>  
-                <input type="hidden" id="contact-id" value="<?php echo $contact['id']; ?>">     
-            </form>
-            <button type="submit" class="btn">Add Note</button>
-        </div>
+                </div>
+                <div id="container-add-notes">
+    <div class="content-margin">
+        <h6>Add a note about <?php echo htmlspecialchars($contact['firstname']); ?></h6>
+        
+        <form action="" method="POST" id="note-form">
+            <textarea id="note-comment" name="note_comment" placeholder="Enter your note here..." onkeypress="submitOnEnter(event)"></textarea>  
+            <input type="hidden" id="contact-id" value="<?php echo $contact['id']; ?>">     
+        </form>
+        <button type="submit" class="btn">Add Note</button>
     </div>
+</div>
 
     <script>
 
