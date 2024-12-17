@@ -259,7 +259,7 @@
                     <div id="filter-container">
                         <span id="filtertxt"><img src="../public/images/filter.png" alt="home ico"> Filter By:</span>
                         <span class="filter-option" data-filter="all">All</span>
-                        <span class="filter-option" data-filter="sales leads">Sales Leads</span>
+                        <span class="filter-option" data-filter="sales lead">Sales Leads</span>
                         <span class="filter-option" data-filter="support">Support</span>
                         <span class="filter-option" data-filter="assigned">Assigned to me</span>
                     </div>
