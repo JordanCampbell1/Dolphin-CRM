@@ -234,39 +234,41 @@
 </head>
 <body>
 <script src='js/dashboard.js'></script>
-    <div class="top">
-        <?php
-        $headerClass = 'secondary-header';
-        $headerId = 'header2';
-        include '../php/HTML-base/navbar.php'; 
-        ?>    
+<div class="top">
+    <?php
+    $headerClass = 'secondary-header';
+    $headerId = 'header2';
+    include '../php/HTML-base/navbar.php';
+    ?>    
+</div>
+
+<div class="main-container">
+    <div class="side">
+        <?php include '../php/HTML-base/side-nav.php'; ?>
     </div>
 
-    <div class="main-container">
-        <div class="side">
-            <?php include '../php/HTML-base/side-nav.php'; ?>
-        </div>
-
-        <div class="content">
-            <div class="container">
-                <!-- Header with h1 and button inline -->
-                <div class="header">
-                    <h1>Dashboard</h1>
-                    <button class="btn" onclick="window.location.href='newContact.php'">Add New Contact</button>
+    <div class="content">
+        <div class="container">
+            <!-- Header with h1 and button inline -->
+            <div class="header">
+                <h1>Dashboard</h1>
+                <button class="btn" onclick="window.location.href='newContact.php'">Add New Contact</button>
+            </div>
+            <div id="content_container">
+                <!-- Filter Container -->
+                <div id="filter-container">
+                    <span id="filtertxt">
+                        <img src="../public/images/filter.png" alt="filter icon"> Filter By:
+                    </span>
+                    <span class="filter-option" data-filter="all">All</span>
+                    <span class="filter-option" data-filter="sales lead">Sales Leads</span>
+                    <span class="filter-option" data-filter="support">Support</span>
+                    <span class="filter-option" data-filter="assigned">Assigned to me</span>
                 </div>
-                <div id="content_container">
-                    <!-- Filter Container -->
-                    <div id="filter-container">
-                        <span id="filtertxt"><img src="../public/images/filter.png" alt="home ico"> Filter By:</span>
-                        <span class="filter-option" data-filter="all">All</span>
-                        <span class="filter-option" data-filter="sales lead">Sales Leads</span>
-                        <span class="filter-option" data-filter="support">Support</span>
-                        <span class="filter-option" data-filter="assigned">Assigned to me</span>
-                    </div>
 
-                    <!-- Table wrapped in a white background container -->
-                    <div class="table-container">
-                        <table>
+                <!-- Table Container -->
+                <div class="table-container">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Title</th>
@@ -275,39 +277,49 @@
                                 <th>Company</th>
                                 <th>Type of Contact</th>
                             </tr>
-                            <tbody id="contacts-table-body">
-                                <?php
-                                try {
-                                    $stmt = $conn->query("SELECT id, title, CONCAT(firstname, ' ', lastname) AS full_name, email, company, type, assigned_to FROM Contacts");
-                                    $stmt->execute();
-                                    $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        </thead>
+                        <tbody id="contacts-table-body">
+                            <?php
+                            try {
+                                // Fetch all contacts
+                                $stmt = $conn->query("
+                                    SELECT id, title, CONCAT(firstname, ' ', lastname) AS full_name, 
+                                           email, company, type, assigned_to
+                                    FROM Contacts
+                                ");
+                                $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                    foreach ($contacts as $contact) {
-                                        $typeClass = strtolower(str_replace(' ', '-', $contact['type']));
-                                        echo "<tr data-type='{$contact['type']}' data-assigned='{$contact['assigned_to']}'>
-                                                <td>{$contact['title']}</td>
-                                                <td>{$contact['full_name']}</td>
-                                                <td>{$contact['email']}</td>
-                                                <td>{$contact['company']}</td>
-                                                <td>
-                                                    <div class='type-action-container'>
-                                                        <span class='type-container {$typeClass}'>{$contact['type']}</span>
-                                                        <a class='view-link' href='fullview.php?id={$contact['id']}'>View</a>
-                                                    </div>
-                                                </td>
-                                            </tr>";
-                                    }
-                                } catch (PDOException $e) {
-                                    echo "<tr><td colspan='5'>Error fetching contacts: " . $e->getMessage() . "</td></tr>";
+                                // Loop through contacts and render rows
+                                foreach ($contacts as $contact) {
+                                    $typeClass = strtolower(str_replace(' ', '-', $contact['type']));
+                                    $assignedTo = $contact['assigned_to'] ?? '';
+
+                                    echo "<tr 
+                                            data-type='" . htmlspecialchars(strtolower($contact['type'])) . "' 
+                                            data-assigned='" . htmlspecialchars($assignedTo) . "'>
+                                            <td>" . htmlspecialchars($contact['title']) . "</td>
+                                            <td>" . htmlspecialchars($contact['full_name']) . "</td>
+                                            <td>" . htmlspecialchars($contact['email']) . "</td>
+                                            <td>" . htmlspecialchars($contact['company']) . "</td>
+                                            <td>
+                                                <div class='type-action-container'>
+                                                    <span class='type-container {$typeClass}'>" . htmlspecialchars($contact['type']) . "</span>
+                                                    <a class='view-link' href='fullview.php?id=" . htmlspecialchars($contact['id']) . "'>View</a>
+                                                </div>
+                                            </td>
+                                        </tr>";
                                 }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            } catch (PDOException $e) {
+                                echo "<tr><td colspan='5'>Error fetching contacts: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <script>
         
