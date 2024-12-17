@@ -26,11 +26,12 @@ try {
 
 <title>New Contact - Dolphin CRM</title>
 <link rel="stylesheet" href="css/newContact.css">
+<script src="js/createContact.js"></script>
 
 <h1>New Contact</h1>
 
 <div class="form-container">
-    <form action="../php/API/CreateContact.php" method="POST">
+    <form id="new-contact-form" method="POST">
         <label for="title">Title:</label>
         <select name="title" id="title" required>
             <option value="Mr">Mr</option>

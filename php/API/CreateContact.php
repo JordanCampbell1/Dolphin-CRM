@@ -9,6 +9,8 @@ error_reporting(E_ALL);
 
 // Start output buffering
 ob_start();
+echo $_SESSION['user_id'];
+error_log('user id from session:' . $_SESSION['user_id']);
 
 if (!isset($_SESSION['user_id'])) {
     die("Access denied. Please log in.");
@@ -30,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = htmlspecialchars(trim($_POST['type']));
     $assigned_to = intval($_POST['assigned_to']);
     $created_by = intval($_SESSION['user_id']);
+
+    error_log("this is first name: " . $firstname . "/////this is last name: " . $lastname . "////////this is email: " . $email . "//////this is type: " . $type);
 
     if (empty($firstname) || empty($lastname) || !$email || empty($type)) {
         $error_message = "Required fields are missing.";
@@ -71,17 +75,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Debugging: Output messages
 if (!empty($error_message)) {
     $_SESSION['error'] = $error_message;
-    echo $error_message; // Debugging
+    error_log("Error Message: " . $error_message);
+    // echo $error_message; // Debugging
     ob_end_clean(); // Clear buffer
-    header("Location: ../../public/newContact.php");
+    // header("Location: ../../public/newContact.php");
     exit();
 }
 
 if (!empty($success_message)) {
     $_SESSION['success'] = $success_message;
-    echo $success_message; // Debugging
+    error_log("Success Message: " . $success_message);
+
+    // echo $success_message; // Debugging
     ob_end_clean(); // Clear buffer
-    header("Location: ../../public/dashboard.php");
+    // header("Location: ../../public/dashboard.php");
     exit();
 }
 ?>
