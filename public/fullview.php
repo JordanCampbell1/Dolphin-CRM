@@ -5,6 +5,7 @@ $dbname = "dolphin_crm";
 $username = "root";
 $password = "";
 
+
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -148,7 +149,6 @@ foreach ($results as $row) {
                             </div>
                         </div>
                     </div>
-
                     </div>
                     <div id="container-notes-list" data-contact-id="<?php echo $contact['id']; ?>">
                         <div class="content-margin">
