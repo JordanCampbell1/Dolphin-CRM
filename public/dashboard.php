@@ -74,32 +74,32 @@
                                 $stmt->execute();
                                 $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                foreach ($contacts as $contact) {
-                                    $typeClass = strtolower(str_replace(' ', '-', $contact['type']));
-                                    echo "<tr data-type='{$contact['type']}' data-assigned='{$contact['assigned_to']}'>
-                                            <td>{$contact['title']}</td>
-                                            <td>{$contact['full_name']}</td>
-                                            <td>{$contact['email']}</td>
-                                            <td>{$contact['company']}</td>
-                                            <td>
-                                                <div class='type-action-container'>
-                                                    <span class='type-container {$typeClass}'>{$contact['type']}</span>
-                                                    <a class='view-link' href='fullview.php?id={$contact['id']}'>View</a>
-                                                </div>
-                                            </td>
-                                        </tr>";
+                                    foreach ($contacts as $contact) {
+                                        $typeClass = strtolower(str_replace(' ', '-', $contact['type']));
+                                        echo "<tr data-type='{$contact['type']}' data-assigned='{$contact['assigned_to']}'>
+                                                <td>{$contact['title']}</td>
+                                                <td>{$contact['full_name']}</td>
+                                                <td>{$contact['email']}</td>
+                                                <td>{$contact['company']}</td>
+                                                <td>
+                                                    <div class='type-action-container'>
+                                                        <span class='type-container {$typeClass}'>{$contact['type']}</span>
+                                                        <a class='view-link' href='fullview.php?id={$contact['id']}'>View</a>
+                                                    </div>
+                                                </td>
+                                            </tr>";
+                                    }
+                                } catch (PDOException $e) {
+                                    echo "<tr><td colspan='5'>Error fetching contacts: " . $e->getMessage() . "</td></tr>";
                                 }
-                            } catch (PDOException $e) {
-                                echo "<tr><td colspan='5'>Error fetching contacts: " . $e->getMessage() . "</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 </body>
 </html>
