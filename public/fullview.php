@@ -16,9 +16,10 @@ try {
 
 // Fetch contact ID from request (GET or POST)
 $contactId = $_GET['id'] ?? null;
-
+$userId = $_GET['user_id'] ?? null;
 if (!$contactId) {
     die('No contact ID provided.');
+    
 }
 
 // SQL query
@@ -28,11 +29,12 @@ $sql = "
         c.assigned_to, 
         IFNULL(CONCAT(u2.firstname, ' ', u2.lastname), 'Not Assigned') AS assigned_to_fullname,
         c.created_by, c.created_at, c.updated_at,
-        IFNULL(CONCAT(u.firstname, ' ', u.lastname), 'Unknown') AS created_by_fullname
-    FROM Contacts c
-    LEFT JOIN Users u ON c.created_by = u.id
-    LEFT JOIN Users u2 ON c.assigned_to = u2.id
-    LEFT JOIN Notes n ON c.id = n.contact_id
+        IFNULL(CONCAT(u.firstname, ' ', u.lastname), 'Unknown') AS created_by_fullname,
+        n.comment AS note_comment, n.created_at AS note_created_at
+    FROM contacts c
+    LEFT JOIN users u ON c.created_by = u.id
+    LEFT JOIN users u2 ON c.assigned_to = u2.id
+    LEFT JOIN notes n ON c.id = n.contact_id
     WHERE c.id = :id
 ";
 
@@ -260,6 +262,7 @@ foreach ($results as $row) {
             margin-top: 5px;
         }
     </style>
+    <script src="js/showNote.js"></script>
 </head>
 <body>
 
@@ -325,7 +328,7 @@ foreach ($results as $row) {
                     </div>
 
                     </div>
-                    <div id="container-notes-list">
+                    <div id="container-notes-list" data-contact-id="<?php echo $contact['id']; ?>">
                         <div class="content-margin">
                             <h5>Notes</h5>
 
@@ -335,6 +338,7 @@ foreach ($results as $row) {
                                         <p><?php echo nl2br(htmlspecialchars($note['comment'])); ?></p>
                                         <small>Created at: <?php echo htmlspecialchars($note['created_at']); ?></small>
                                     </div>
+                                    
                                 <?php endforeach; ?>
                                 <?php else: ?>
                                    <p>No notes available for this contact.</p>
@@ -342,64 +346,71 @@ foreach ($results as $row) {
                                 <?php else: ?>
                                     <p>Contact not found.</p>
                                 <?php endif; ?>
+                                
                         </div>
                     </div>
-                    <div id="container-addnotes">
-                        <div class="content-margin">
-                            <h6>Add a note about <?php echo htmlspecialchars($contact['firstname']); ?></h6>
-                            <form action="add_note.php" method="POST" id="note-form">
-                                <textarea name="note_comment" placeholder="Enter your note here..." onkeypress="submitOnEnter(event)"></textarea>       
-                            </form>
-                            <button type="submit" class="btn">Add Note</button>
-                        </div>
-
-                    </div>
-            </div>
+                    <div id="container-add-notes">
+        <div class="content-margin">
+            <h6>Add a note about <?php echo htmlspecialchars($contact['firstname']); ?></h6>
+            
+            <form action="" method="POST" id="note-form">
+                <textarea id="note-comment" name="note_comment" placeholder="Enter your note here..." onkeypress="submitOnEnter(event)"></textarea>  
+                <input type="hidden" id="contact-id" value="<?php echo $contact['id']; ?>">     
+            </form>
+            <button type="submit" class="btn">Add Note</button>
         </div>
     </div>
-    <script>
-       
-        function assigntome(contactId) {
-        console.log('Assign to me clicked', contactId);
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "../php/setup/assigntome.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            console.log('Ready state:', this.readyState, 'Status:', this.status);
-            if (this.readyState === 4) {
-                console.log('Response:', this.responseText);
-                if (this.status === 200) {
-                    alert("Contact assigned successfully");
-                    location.reload();
-                } else {
-                    alert("Error assigning contact: " + this.responseText);
-                }
-            }
-        };
-        xhr.send("id=" + encodeURIComponent(contactId));
-    }
 
-    function switchrole(contactId, currentType) {
-        console.log('Switch role clicked', contactId, currentType);
-        var newType = (currentType === 'sales lead') ? 'support' : 'sales lead';
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "../php/setup/switchrole.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            console.log('Ready state:', this.readyState, 'Status:', this.status);
-            if (this.readyState === 4) {
-                console.log('Response:', this.responseText);
-                if (this.status === 200) {
-                    alert("Role switched successfully");
-                    location.reload();
-                } else {
-                    alert("Error switching role: " + this.responseText);
-                }
-            }
-        };
-        xhr.send("id=" + encodeURIComponent(contactId) + "&type=" + encodeURIComponent(newType));
+    <script>
+
+function submitOnEnter(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        addNote();
     }
-</script>
-    
+}
+
+// Existing functions
+function assigntome(contactId) {
+    console.log('Assign to me clicked', contactId);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "../php/setup/assigntome.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        console.log('Ready state:', this.readyState, 'Status:', this.status);
+        if (this.readyState === 4) {
+            console.log('Response:', this.responseText);
+            if (this.status === 200) {
+                alert("Contact assigned successfully");
+                location.reload();
+            } else {
+                alert("Error assigning contact: " + this.responseText);
+            }
+        }
+    };
+    xhr.send("id=" + encodeURIComponent(contactId));
+}
+
+function switchrole(contactId, currentType) {
+    console.log('Switch role clicked', contactId, currentType);
+    var newType = (currentType === 'sales lead') ? 'support' : 'sales lead';
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "../php/setup/switchrole.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        console.log('Ready state:', this.readyState, 'Status:', this.status);
+        if (this.readyState === 4) {
+            console.log('Response:', this.responseText);
+            if (this.status === 200) {
+                alert("Role switched successfully");
+                location.reload();
+            } else {
+                alert("Error switching role: " + this.responseText);
+            }
+        }
+    };
+    xhr.send("id=" + encodeURIComponent(contactId) + "&type=" + encodeURIComponent(newType));
+}
+    </script>
 </body>
 </html>
