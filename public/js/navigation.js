@@ -1,4 +1,4 @@
-let URLHistory; 
+let URLHistory;
 
 function loadContent(url) {
   console.log("hit navigation");
@@ -47,7 +47,7 @@ function loadContent(url) {
 
 // }
 
-function reloadPage(){
+function reloadPage() {
   console.log("page reload function called");
   loadContent(URLHistory);
 }

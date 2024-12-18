@@ -1,4 +1,8 @@
 <?php
+session_start();
+?>
+
+<?php
 try {
     // Replace with your actual database credentials
     $host = "localhost";
@@ -32,9 +36,10 @@ try {
 
 <title>Dashboard - Dolphin CRM</title>
 <link rel="stylesheet" href="css/dashboard.css">
+<script src="js/dashboard.js"></script>
 
-
-
+<body onload="initializeFilters()" data-user-id="<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'null'; ?>">
+    
 <!-- Header with h1 and button inline -->
 <div class="header">
     <h1>Dashboard</h1>
@@ -44,8 +49,8 @@ try {
     <!-- Filter Container -->
     <div id="filter-container">
         <span id="filtertxt"><img src="../public/images/filter.png" alt="home ico"> Filter By:</span>
-        <span class="filter-option" data-filter="all">All</span>
-        <span class="filter-option" data-filter="sales leads">Sales Leads</span>
+        <span class="filter-option" data-filter="all" >All</span>
+        <span class="filter-option" data-filter="sales lead">Sales Leads</span>
         <span class="filter-option" data-filter="support">Support</span>
         <span class="filter-option" data-filter="assigned">Assigned to me</span>
     </div>
@@ -91,3 +96,6 @@ try {
         </table>
     </div>
 </div>
+
+
+</body>

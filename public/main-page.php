@@ -5,6 +5,7 @@
     <?php include '../php/HTML-base/head.php';    ?>
     <link rel="stylesheet" href="css/styles-index.css" />
     <script src="js/navigation.js"></script>
+
 </head>
 
 <body>
