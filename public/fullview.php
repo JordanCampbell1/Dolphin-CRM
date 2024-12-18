@@ -28,7 +28,9 @@ $sql = "
         c.assigned_to, 
         IFNULL(CONCAT(u2.firstname, ' ', u2.lastname), 'Not Assigned') AS assigned_to_fullname,
         c.created_by, c.created_at, c.updated_at,
-        IFNULL(CONCAT(u.firstname, ' ', u.lastname), 'Unknown') AS created_by_fullname
+        IFNULL(CONCAT(u.firstname, ' ', u.lastname), 'Unknown') AS created_by_fullname,
+        n.comment AS note_comment, 
+        n.created_at AS note_created_at
     FROM Contacts c
     LEFT JOIN Users u ON c.created_by = u.id
     LEFT JOIN Users u2 ON c.assigned_to = u2.id
@@ -79,6 +81,7 @@ foreach ($results as $row) {
 
 <title>Contact Details - Dolphin CRM</title>
 <link rel="stylesheet" href="css/fullview.css">
+<script src="js/showNote.js"></script>
 
 
 <div class="container">
@@ -151,8 +154,9 @@ foreach ($results as $row) {
 <div id="container-addnotes">
     <div class="content-margin">
         <h6>Add a note about <?php echo htmlspecialchars($contact['firstname']); ?></h6>
-        <form action="add_note.php" method="POST" id="note-form">
+        <form method="POST" id="note-form">
             <textarea name="note_comment" placeholder="Enter your note here..." onkeypress="submitOnEnter(event)"></textarea>
+            <input type="hidden" id="contact-id" value="<?php echo $contact['id']; ?>">
         </form>
         <button type="submit" class="btn">Add Note</button>
     </div>
@@ -161,6 +165,14 @@ foreach ($results as $row) {
 </div>
 
 <script>
+    function submitOnEnter(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            addNote();
+            loadNotes();
+        }
+    }
+
     function assigntome(contactId) {
         console.log('Assign to me clicked', contactId);
         var xhr = new XMLHttpRequest();
